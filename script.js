@@ -3,13 +3,9 @@ var c = document.getElementById("canvas");
 c.width = 800;
 c.height = 800;
 var ctx = c.getContext("2d");
+ctx.strokeStyle = 'red';
+ctx.lineWidth = 2;
 
-var startX = 0;
-var startY = 0;
-var endX = 500;
-var endY = 250;
-var p = 333;
-var y = 120;
 var trains = [{
   "red": [
       {
@@ -130,38 +126,56 @@ var trains = [{
     ]
 }];
 
-for (var i = 0; i < trains.length; i++) {
-  var t = trains[i];
-  for (var x = 0; x < t.red.length; x++) {
-    console.log(t.red[x].station, t.red[x].x, t.red[x].y);
-  }
-}
+var redLine = trains[0].red;
+console.log("redLine:" + redLine);
+ctx.moveTo(redLine[0].x, redLine[0].y);
 
-function draw() {  
-  ctx.strokeStyle = 'red';
-  ctx.lineWidth = 2;
+/*
+ - Set initial departure point: moveTo first coordinate in redLine's array.
+ - Draw a line from that point to the next coordinate.
+ - Draw another a line from that coordinate to the next coordinate.
+ - Continue until there are no more coordinates left in trainline's array.
+ - How to parallelize this for multiple train lines?
+
+*/
+
+var s = 0;
+var duration = 2000;
+var startTime = null;
+
+function animate(time) {
+	console.log("redline:" + redLine[s].station);
+	console.log(time);
+  if (!startTime) {
+    startTime = time;
+  }
+  var timeElapsed = time - startTime;
+  var delta = Math.min(1, timeElapsed / duration);
+  console.log("delta:" + delta);
+  console.log("redLine[s+1].x: " + redLine[s+1].x);
+  var dX = (redLine[s+1].x - redLine[s].x) * delta;
+  var dY = (redLine[s+1].y - redLine[s].y) * delta;
+  console.log("dX, dY: " + dX + "," + dY);
+  // ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   ctx.beginPath();
-  ctx.moveTo(333, 120);
-  // moveTo coordinates.red.stationPos[0];
-  // draw to coordinates.red.stationPos[1], pause, endPath, then draw to [2], etc
-  // until .last
-  // what about multiple trains?
-
-  if (p < endX) {
-    ctx.lineTo(p, y);
-  }
-  else {
-    ctx.clearRect(0,0,canvas.width, canvas.height);
-    p = 333;
-    y = 120;
-  }
+  ctx.moveTo(redLine[s].x, redLine[s].y);
+  ctx.lineTo(redLine[s].x + dX, redLine[s].y + dY);
   ctx.stroke();
-  p++;
-  y++;
-  requestAnimationFrame(draw);
-  
+	
+	if (delta < 1) {
+    requestAnimationFrame(animate);
+  } else {
+  	console.log('delta > 1');
+    startTime = null;
+    s++;
+    startAnim();
+  }
 }
 
+var startAnim = function() {
+  requestAnimationFrame(animate);
 
+};
 
-draw();
+startAnim();
