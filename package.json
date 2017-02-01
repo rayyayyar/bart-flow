@@ -4,8 +4,8 @@
   "description": "Experiments with BART API.",
   "main": "entry.js",
   "scripts": {
-    // "start": "webpack-dev-server --inline --hot",
-    "build": "webpack entry.js bundle.js"
+    "build": "webpack entry.js bundle.js",
+    "dev": "webpack-dev-server --hot"
   },
   "repository": {
     "type": "git",

@@ -33,8 +33,8 @@ function animate(time) {
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   ctx.beginPath();
-  ctx.moveTo(redLine[s].x, redLine[s].y);
-  ctx.lineTo(redLine[s].x + dX, redLine[s].y + dY);
+  ctx.moveTo(Math.round(redLine[s].x), Math.round(redLine[s].y));
+  ctx.lineTo(Math.round(redLine[s].x + dX), Math.round(redLine[s].y + dY));
   ctx.stroke();
 	
 	if (delta < 1) {
