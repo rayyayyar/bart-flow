@@ -1,3 +1,4 @@
+// TODO: include JSON from another js file
 console.log("Start");
 var c = document.getElementById("canvas");
 var ctx = c.getContext("2d");
@@ -6,9 +7,9 @@ c.height = 800;
 ctx.strokeStyle = 'red';
 ctx.lineWidth = 3;
 ctx.lineCap="round";
-import coordinates from "./trains.js";
+import coordinates from "trains";
 
-var redLine = coordinates[0].red;
+var redLine = trains[0].red;
 console.log("redLine:" + redLine);
 ctx.moveTo(redLine[0].x, redLine[0].y);
 
@@ -17,8 +18,8 @@ var duration = 1000;
 var startTime = null;
 
 function animate(time) {
-	console.log("redline:" + redLine[s].station);
-	console.log(time);
+  console.log("redline:" + redLine[s].station);
+  console.log(time);
   if (!startTime) {
     startTime = time;
   }
@@ -36,8 +37,8 @@ function animate(time) {
   ctx.moveTo(redLine[s].x, redLine[s].y);
   ctx.lineTo(redLine[s].x + dX, redLine[s].y + dY);
   ctx.stroke();
-	
-	if (delta < 1) {
+  
+  if (delta < 1) {
     requestAnimationFrame(animate);    
   } else {
     startTime = null;
