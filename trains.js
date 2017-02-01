@@ -1,3 +1,4 @@
+console.log('export trains');
 var trains = [{
   "red": [
       {
@@ -118,6 +119,5 @@ var trains = [{
     ]
 }];
 
-export default function trains() {
-  return coordinates;
-}
+
+module.exports = trains;
