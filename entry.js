@@ -7,6 +7,18 @@ ctx.strokeStyle = 'red';
 ctx.lineWidth = 3;
 ctx.lineCap="round";
 import coordinates from "./trains.js";
+var riders = require("./data/riders.json");
+// console.log("riders: " + riders);
+
+function showRiders(json) {
+  console.log("showRiders()");
+  var riders = json;
+  for (var i = 0; i < riders.length; i++) {
+    console.log("From " + riders[i].origin + " to " + riders[i].dest + ", at " + riders[i].time + ":00 hours, " + "it's an average of " + riders[i].riders + "0 riders.");
+  }
+}
+
+showRiders(riders);
 
 var redLine = coordinates[0].red;
 console.log("redLine:" + redLine);
@@ -51,4 +63,4 @@ var startAnim = function() {
 
 };
 
-startAnim();
+// startAnim();
