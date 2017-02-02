@@ -8,7 +8,6 @@ ctx.lineWidth = 3;
 ctx.lineCap="round";
 import coordinates from "./trains.js";
 var riders = require("./data/riders.json");
-// console.log("riders: " + riders);
 
 function showRiders(json) {
   console.log("showRiders()");
@@ -20,6 +19,23 @@ function showRiders(json) {
 
 showRiders(riders);
 
+/*
+ - Get real local time 'hour'
+ - Pick a train line e.g. redLine
+ - Filter to closest 'time' value in riders.json based on real 'hour'
+ ------
+ - Get home origin departure station and time
+ - Get final dest departure station and time
+ - Calculate duration based on difference in time or just make a best guess
+ ------
+ - lineTo from redLine SB origin to next dept station e.g. RICH to DELN (origin / dest)
+ - Set lineWidth according to riders.ridersCount for the selected origin / dest pair
+ - Stroke
+ - 
+*/
+
+
+
 var redLine = coordinates[0].red;
 console.log("redLine:" + redLine);
 ctx.moveTo(redLine[0].x, redLine[0].y);
@@ -29,20 +45,17 @@ var duration = 1000;
 var startTime = null;
 
 function animate(time) {
-	console.log("redline:" + redLine[s].station);
+	console.log("redline current station:" + redLine[s].station);
+  console.log("redline next station:" + redLine[s+1].station);
 	console.log(time);
   if (!startTime) {
     startTime = time;
   }
   var timeElapsed = time - startTime;
   var delta = Math.min(1, timeElapsed / duration);
-  console.log("delta:" + delta);
-  console.log("redLine[s+1].x: " + redLine[s+1].x);
   var dX = (redLine[s+1].x - redLine[s].x) * delta;
   var dY = (redLine[s+1].y - redLine[s].y) * delta;
-  // TODO: round delta to nearest pixel integer
   console.log("dX, dY: " + dX + "," + dY);
-  // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   ctx.beginPath();
   ctx.moveTo(Math.round(redLine[s].x), Math.round(redLine[s].y));
