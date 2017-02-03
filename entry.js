@@ -37,8 +37,6 @@ var trainLoad = 1;
   - Sum all riderCounts for values at a specific station. Subtract from totalCount as they exit.
 */
 
-
-
 var redLine = coordinates[0].red;
 console.log("redLine:" + redLine);
 ctx.moveTo(redLine[0].x, redLine[0].y);
@@ -47,18 +45,23 @@ var s = 0;
 var duration = 1000;
 var startTime = null;
 
+function matchTrip(origin, dest, l) {
+  return l.origin == origin && l.dest == dest;
+};
+
 function animate(time) {
   var origin = redLine[s].station;
   var dest = redLine[s+1].station;
-  var tripMatch = riders.filter(function(t) {
-    return t.origin == origin && t.dest == dest;
-  });
+  // create new array of data that matches this origin / dest pair
+  var tripMatch = riders.filter(matchTrip.bind(this, origin, dest));
+  console.log("tripMatch: " + JSON.stringify(tripMatch));
+
   if (tripMatch[0]) {
     trainLoad = tripMatch[0].riders;
     ctx.lineWidth = trainLoad;
     console.log("trainLoad: " + trainLoad);
   }
-  console.log("tripMatch: " + JSON.stringify(tripMatch));
+
 	console.log("redline current station:" + redLine[s].station);
   console.log("redline next station:" + redLine[s+1].station);
 	console.log("time: " + time);
