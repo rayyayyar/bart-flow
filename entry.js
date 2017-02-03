@@ -47,32 +47,6 @@ var s = 0;
 var duration = 1000;
 var startTime = null;
 
-// function getRiders(origin, dest) {
-//   // gets riders for a particular trip
-//   var ridersTrip = riders.filter((riders.origin === origin) && (riders.dest === dest));
-//   return ridersTrip;
-//   console.log("ridersTrip: " + ridersTrip);
-// }
-
-function isTrip(origin, dest) {
-  console.log("isTrip()");
-  console.log("riders[s].origin: " + riders[s].origin);
-  console.log("origin:" + origin);
-  if (riders[s].origin === origin) {
-    return true;
-    console.log("riders.origin: " + riders.origin);
-  }
-  else {
-    return false;
-    console.log("is not trip");
-  }
-}
-
-function isCurrentOrigin(trip, origin) {
-  return trip.origin == "RICH";
-}
-
-
 function animate(time) {
   var origin = redLine[s].station;
   var dest = redLine[s+1].station;
