@@ -45,26 +45,66 @@ var s = 0;
 var duration = 1000;
 var startTime = null;
 
-function matchTrip(origin, dest, l) {
-  return l.origin == origin && l.dest == dest;
-};
+function matchTrip(origin, dest, t) {
+  return t.origin == origin && t.dest == dest;
+}
+
+function isOrigin(origin, t) {
+  return t.origin == origin;
+}
+
+function isOnRed(t) {
+  // is trip object t's origin  == to any of redLine's stations?
+  for (var i = 0; i < redLine.length; i++) {
+    if (t.origin == redLine[i].station) {
+      for (var i = 0; i < redLine.length; i++) {
+        if (t.dest == redLine[i].station) {
+          return true;
+        }
+      }
+    }
+  }
+}
+
+var redLineRiders = riders.filter(isOnRed);
+console.log("redLineRiders: " + JSON.stringify(redLineRiders));
+
+// sum all riders that board at an origin station that's on a specific line
+function sumBoard (line, origin) {
+  var ridersCount = line.reduce(function(sum, x) {
+    if (x.origin == origin) {
+      console.log("sum");
+      return sum + x.riders;
+    }
+    return sum;
+  }, 1);
+  return ridersCount;
+}
+
+var sum12th = sumBoard(redLineRiders, "12TH");
+console.log("sum12th: " + sum12th);
 
 function animate(time) {
   var origin = redLine[s].station;
   var dest = redLine[s+1].station;
-  // create new array of data that matches this origin / dest pair
+  // create new array of data that matches current origin / dest pair
   var tripMatch = riders.filter(matchTrip.bind(this, origin, dest));
-  console.log("tripMatch: " + JSON.stringify(tripMatch));
+  // console.log("tripMatch: " + JSON.stringify(tripMatch));
 
   if (tripMatch[0]) {
-    trainLoad = tripMatch[0].riders;
+    // trainLoad += sumBoard(redLine, origin);
+    console.log("sumBoard(redLineRiders, origin): " + sumBoard(redLineRiders, origin));
+    if (tripMatch[0].riders > trainLoad) {
+      trainLoad += tripMatch[0].riders;
+    }
+    else trainLoad -= sumBoard(redLineRiders, origin);
     ctx.lineWidth = trainLoad;
     console.log("trainLoad: " + trainLoad);
   }
 
-	console.log("redline current station:" + redLine[s].station);
-  console.log("redline next station:" + redLine[s+1].station);
-	console.log("time: " + time);
+	// console.log("redline current station:" + redLine[s].station);
+ //  console.log("redline next station:" + redLine[s+1].station);
+	// console.log("time: " + time);
 
   if (!startTime) {
     startTime = time;
