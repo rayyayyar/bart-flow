@@ -37,8 +37,6 @@ var trainLoad = 1;
   - Sum all riderCounts for values at a specific station. Subtract from totalCount as they exit.
 */
 
-
-
 var redLine = coordinates[0].red;
 console.log("redLine:" + redLine);
 ctx.moveTo(redLine[0].x, redLine[0].y);
@@ -47,44 +45,23 @@ var s = 0;
 var duration = 1000;
 var startTime = null;
 
-// function getRiders(origin, dest) {
-//   // gets riders for a particular trip
-//   var ridersTrip = riders.filter((riders.origin === origin) && (riders.dest === dest));
-//   return ridersTrip;
-//   console.log("ridersTrip: " + ridersTrip);
-// }
-
-function isTrip(origin, dest) {
-  console.log("isTrip()");
-  console.log("riders[s].origin: " + riders[s].origin);
-  console.log("origin:" + origin);
-  if (riders[s].origin === origin) {
-    return true;
-    console.log("riders.origin: " + riders.origin);
-  }
-  else {
-    return false;
-    console.log("is not trip");
-  }
-}
-
-function isCurrentOrigin(trip, origin) {
-  return trip.origin == "RICH";
-}
-
+function matchTrip(origin, dest, l) {
+  return l.origin == origin && l.dest == dest;
+};
 
 function animate(time) {
   var origin = redLine[s].station;
   var dest = redLine[s+1].station;
-  var tripMatch = riders.filter(function(t) {
-    return t.origin == origin && t.dest == dest;
-  });
+  // create new array of data that matches this origin / dest pair
+  var tripMatch = riders.filter(matchTrip.bind(this, origin, dest));
+  console.log("tripMatch: " + JSON.stringify(tripMatch));
+
   if (tripMatch[0]) {
     trainLoad = tripMatch[0].riders;
     ctx.lineWidth = trainLoad;
     console.log("trainLoad: " + trainLoad);
   }
-  console.log("tripMatch: " + JSON.stringify(tripMatch));
+
 	console.log("redline current station:" + redLine[s].station);
   console.log("redline next station:" + redLine[s+1].station);
 	console.log("time: " + time);
