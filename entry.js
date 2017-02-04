@@ -1,25 +1,3 @@
-console.log("Start");
-var c = document.getElementById("canvas");
-var ctx = c.getContext("2d");
-c.width = 800;
-c.height = 800;
-ctx.strokeStyle = 'red';
-ctx.lineWidth = 1;
-ctx.lineCap="round";
-import coordinates from "./trains.js";
-var riders = require("./data/riders.json");
-var trainLoad = null;
-
-// function showRiders(json) {
-//   console.log("showRiders()");
-//   var riders = json;
-//   for (var i = 0; i < riders.length; i++) {
-//     console.log("From " + riders[i].origin + " to " + riders[i].dest + ", at " + riders[i].time + ":00 hours, " + "it's an average of " + riders[i].riders + "0 riders.");
-//   }
-// }
-
-// showRiders(riders);
-
 /*
  - Get real local time 'hour'
  - Pick a train line e.g. redLine
@@ -37,15 +15,34 @@ var trainLoad = null;
   - Sum all riderCounts for values at a specific station. Subtract from totalCount as they exit.
 */
 
+console.log("Start");
+var c = document.getElementById("canvas");
+var ctx = c.getContext("2d");
+c.width = 800;
+c.height = 800;
+ctx.strokeStyle = 'red';
+ctx.lineWidth = 1;
+ctx.lineCap="round";
+import coordinates from "./trains.js";
+var riders = require("./data/riders.json");
+var trainLoad = null;
+
+/* animate each hour
+ - loop i through redLineRidersSouthBound array of trip objects
+ - animate() first hour while redLineRidersSouthBound.hour == i
+ - (slowly) reset the canvas
+ - i++
+ - animate() next hour where i is 1
+
+*/
+
 var redLine = coordinates[0].red;
-console.log("redLine:" + redLine);
 var redLineRiders = riders.filter(isOnRed);
 console.log("redLineRiders: " + JSON.stringify(redLineRiders));
 
-
 ctx.moveTo(redLine[0].x, redLine[0].y);
 var s = 0;
-var duration = 1000;
+var duration = 60;
 var startTime = null;
 
 function matchTrip(origin, dest, t) {
@@ -93,9 +90,19 @@ function sumBoard (line, origin) {
   return ridersCount;
 }
 
-function animate(time) {
+//filter function to return all trips of a requested hour
+
+function tripsHour(t) {
+  return t.hour == 0;
+}
+
+var trips0 = redLineRidersSouthBound.filter(tripsHour);
+console.log("trips0: " + JSON.stringify(trips0));
+
+function animate(time, hour) {
   var origin = redLine[s].station;
   var dest = redLine[s+1].station;
+  // create new object array where h = current hour
   // create new object array with ridership that matches current origin / dest pair
   var currTrip = riders.filter(matchTrip.bind(this, origin, dest));
   console.log("currTrip: " + JSON.stringify(currTrip));
@@ -120,6 +127,8 @@ function animate(time) {
   } else {
     // train stops
     startTime = null;
+    document.getElementById("trip").innerHTML = origin + " to " + dest;
+    // document.getElementById("hour").innerHTML = riders[i].time + ":00";
     console.log("origin: " + origin);
     console.log(sumBoard(redLineRidersSouthBound, origin) + " boarded at " + origin);
     trainLoad += sumBoard(redLineRidersSouthBound, origin);
@@ -139,7 +148,20 @@ function animate(time) {
 
 var startAnim = function() {
   requestAnimationFrame(animate);
-
 };
 
-startAnim();
+function bartFlow() {
+  redLineRidersSouthBound.forEach(function(l) {
+    for (var i = 0; i < 5; i++) {
+      document.getElementById("hour").innerHTML = i;
+      if (l.hour == i) {
+        startAnim();
+        // startAnim() using only hour == i
+        console.log("From " + l.origin + " to " + l.dest + ", at " + l.hour + ":00 hours, " + "it's an average of " + l.riders + "0 riders.");
+      }
+    }
+    
+  });
+}
+bartFlow();
+
