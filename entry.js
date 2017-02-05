@@ -90,21 +90,22 @@ function sumBoard (line, origin) {
   return ridersCount;
 }
 
-//filter function to return all trips of a requested hour
-
-function tripsHour(t) {
-  return t.hour == 0;
+//filter function to return only trips of a requested hour
+function tripsHour(hour) {
+  return function(t) {
+    return t.hour == 0;
+  }
 }
-
-var trips0 = redLineRidersSouthBound.filter(tripsHour);
-console.log("trips0: " + JSON.stringify(trips0));
 
 function animate(time, hour) {
   var origin = redLine[s].station;
   var dest = redLine[s+1].station;
-  // create new object array where h = current hour
+  var hour = 0;
+  // create new object array where hour is current hour
+  var trips = redLineRidersSouthBound.filter(tripsHour(hour));
+  console.log("trips: " + JSON.stringify(trips));
   // create new object array with ridership that matches current origin / dest pair
-  var currTrip = riders.filter(matchTrip.bind(this, origin, dest));
+  var currTrip = trips.filter(matchTrip.bind(this, origin, dest));
   console.log("currTrip: " + JSON.stringify(currTrip));
 
   if (!startTime) {
@@ -151,17 +152,8 @@ var startAnim = function() {
 };
 
 function bartFlow() {
-  redLineRidersSouthBound.forEach(function(l) {
-    for (var i = 0; i < 5; i++) {
-      document.getElementById("hour").innerHTML = i;
-      if (l.hour == i) {
-        startAnim();
-        // startAnim() using only hour == i
-        console.log("From " + l.origin + " to " + l.dest + ", at " + l.hour + ":00 hours, " + "it's an average of " + l.riders + "0 riders.");
-      }
-    }
-    
-  });
+  startAnim();
 }
+
 bartFlow();
 
