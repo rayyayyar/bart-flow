@@ -42,7 +42,7 @@ console.log("redLineRiders: " + JSON.stringify(redLineRiders));
 
 ctx.moveTo(redLine[0].x, redLine[0].y);
 var s = 0;
-var duration = 1000;
+var duration = 60;
 var startTime = null;
 
 function matchTrip(origin, dest, t) {
@@ -107,16 +107,12 @@ function tripsHour(hour) {
   }
 }
 
-var hour = 8;
-// create new object array where hour is current hour
-var trips = redLineRidersSouthBound.filter(tripsHour(hour));
-console.log("trips: " + JSON.stringify(trips));
-
-function animate(time) {
+// animates each trip
+function animate(time, trips) {
+  console.log("animate");
   var origin = redLine[s].station;
   var dest = redLine[s+1].station;
-
-  // console.log("trips: " + JSON.stringify(trips));
+  var trips = redLineRidersSouthBound.filter(tripsHour(0));
   // create new object array with ridership that matches current origin / dest pair
   var currTrip = trips.filter(matchTrip.bind(this, origin, dest));
   console.log("currTrip: " + JSON.stringify(currTrip));
@@ -133,10 +129,11 @@ function animate(time) {
   ctx.beginPath();
   ctx.moveTo(Math.round(redLine[s].x), Math.round(redLine[s].y));
   ctx.lineTo(Math.round(redLine[s].x + dX), Math.round(redLine[s].y + dY));
+  ctx.lineWidth = trainLoad / 300;
   ctx.stroke();
 
 	if (delta < 1) {
-    // train's moving
+    // train's moving, keep repainting
     requestAnimationFrame(animate);
   } else {
     // train stops
@@ -152,28 +149,31 @@ function animate(time) {
     if (trainLoad < 1) {
       ctx.lineWidth = .025;
     }
-    else ctx.lineWidth = trainLoad / 200;
-
-    // if (currTrip[0]) {
-    //   trainLoad -= currTrip[0].riders;
-    //   console.log(currTrip[0].riders + " exit at " + dest);
-    //   console.log("trainLoad -= currTrip[0].riders, trainLoad = " + trainLoad);
-    //   //console.log("trainLoad: " + trainLoad);
-    //   ctx.lineWidth = trainLoad / 250;
-    // }
-    // look for total exits for this destination from all trips
-    s++;
-    setTimeout(function(){ startAnim() });
+    else ctx.lineWidth = trainLoad / 300;
+    if (s < redLine.length - 2) {
+      console.log("redLine.length: " + redLine.length + "," + "s: " + s);
+      s++; 
+      startAnim();
+    } else { s = 0; console.log("s: " + s); }
+    
   }
+// when a route is done, start over with next hour and reset s to zero
 }
 
-var startAnim = function() {
+// function bartFlow() {
+//   for (var h = 0; h < 5; h++) {
+//     // create new object array where hour is current hour
+//     var trips = redLineRidersSouthBound.filter(tripsHour(h));
+//     console.log("trips: " + h + JSON.stringify(trips));
+//     startAnim(trips);
+//   }
+// }
+
+function startAnim(trips) {
+  // console.log("startAnim trips: " + JSON.stringify(trips));
+  // console.log("startAnim");
   requestAnimationFrame(animate);
 };
 
-function bartFlow() {
-  startAnim();
-}
-
-bartFlow();
-
+// bartFlow();
+startAnim();
