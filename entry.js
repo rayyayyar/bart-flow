@@ -26,6 +26,8 @@ ctx.lineCap="round";
 import coordinates from "./trains.js";
 var riders = require("./data/riders.json");
 var trainLoad = 0;
+document.getElementById("hour").innerHTML = "0:00";
+
 
 /* animate each hour
  - loop i through redLineRidersSouthBound array of trip objects
@@ -38,11 +40,11 @@ var trainLoad = 0;
 
 var redLine = coordinates[0].red;
 var redLineRiders = riders.filter(isOnRed);
-console.log("redLineRiders: " + JSON.stringify(redLineRiders));
+// console.log("redLineRiders: " + JSON.stringify(redLineRiders));
 
 ctx.moveTo(redLine[0].x, redLine[0].y);
 var s = 0;
-var duration = 60;
+var duration = 900;
 var startTime = null;
 
 function matchTrip(origin, dest, t) {
@@ -63,7 +65,7 @@ function getStationIndex(line, station) {
 
 // filter down redLineRiders json to only Southbound trips
 var redLineRidersSouthBound = redLineRiders.filter(isSouthBound);
-console.log("redLineRidersSouthBound: " + JSON.stringify(redLineRidersSouthBound));
+// console.log("redLineRidersSouthBound: " + JSON.stringify(redLineRidersSouthBound));
 
 function isOnRed(t) {
   // is trip object t's origin  == to any of redLine's stations?
@@ -107,20 +109,29 @@ function tripsHour(hour) {
   }
 }
 
-// animates each trip
-function animate(time, trips) {
-  console.log("animate");
-  var origin = redLine[s].station;
-  var dest = redLine[s+1].station;
-  var trips = redLineRidersSouthBound.filter(tripsHour(0));
-  // create new object array with ridership that matches current origin / dest pair
-  var currTrip = trips.filter(matchTrip.bind(this, origin, dest));
-  console.log("currTrip: " + JSON.stringify(currTrip));
+var doIt = new Promise(function(resolve, reject) {
+  resolve(0);
+  startAnim();
+});
 
+var h = 0;
+var trips = redLineRidersSouthBound.filter(tripsHour(h));
+var s = 0;
+
+// animates each trip
+function animate(time) {
   if (!startTime) {
     startTime = time;
   }
+  console.log("s" + s);
+  console.log("animate");
+  var origin = redLine[s].station;
+  var dest = redLine[s+1].station;
+  var trips = redLineRidersSouthBound.filter(tripsHour(h));
+  console.log("trips:" + JSON.stringify(trips));
 
+  // create new object array with ridership that matches current origin / dest pair
+  var currTrip = trips.filter(matchTrip.bind(this, origin, dest));
   var timeElapsed = time - startTime;
   var delta = Math.min(1, timeElapsed / duration);
   var dX = (redLine[s+1].x - redLine[s].x) * delta;
@@ -139,7 +150,6 @@ function animate(time, trips) {
     // train stops
     startTime = null;
     document.getElementById("trip").innerHTML = origin + " to " + dest;
-    // document.getElementById("hour").innerHTML = riders[i].time + ":00";
     console.log("origin: " + origin);
     console.log(sumBoard(trips, origin) + " boarded at " + origin);
     trainLoad += sumBoard(trips, origin);
@@ -150,14 +160,20 @@ function animate(time, trips) {
       ctx.lineWidth = .025;
     }
     else ctx.lineWidth = trainLoad / 300;
-    if (s < redLine.length - 2) {
+
+    s++;
+    if (s < redLine.length - 1) {
       console.log("redLine.length: " + redLine.length + "," + "s: " + s);
-      s++; 
-      startAnim();
-    } else { s = 0; console.log("s: " + s); }
-    
+    } else if (s >= redLine.length - 2) {
+      h++;
+      s = 0;
+      console.log("s: " + s);
+      console.log("h: " + h);
+      document.getElementById("hour").innerHTML = h + ":00";
+      var trips = redLineRidersSouthBound.filter(tripsHour(h));
+    }
+    startAnim();
   }
-// when a route is done, start over with next hour and reset s to zero
 }
 
 // function bartFlow() {
@@ -176,4 +192,4 @@ function startAnim(trips) {
 };
 
 // bartFlow();
-startAnim();
+// startAnim();
