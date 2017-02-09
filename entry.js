@@ -15,27 +15,29 @@
   - Sum all riderCounts for values at a specific station. Subtract from totalCount as they exit.
 */
 
-console.log("Start");
+import coordinates from "./trains.js";
+var riders = require("./data/riders.json");
 var c = document.getElementById("canvas");
 var ctx = c.getContext("2d");
 c.width = 800;
 c.height = 800;
+ctx.translate(0.5, 0.5);
 ctx.strokeStyle = 'red';
 ctx.lineWidth = 1;
 ctx.lineCap="round";
-import coordinates from "./trains.js";
-var riders = require("./data/riders.json");
-var trainLoad = 0;
-document.getElementById("hour").innerHTML = "0:00";
-
 var redLine = coordinates[0].red;
 var redLineRiders = riders.filter(isOnRed);
-// console.log("redLineRiders: " + JSON.stringify(redLineRiders));
-
-ctx.moveTo(redLine[0].x, redLine[0].y);
+// filter down redLineRiders json to only Southbound trips
+var redLineRidersSouthBound = redLineRiders.filter(isSouthBound);
+var trips = redLineRidersSouthBound.filter(tripsHour(h));
 var s = 0;
-var duration = 900;
+var duration = 90;
 var startTime = null;
+var trainLoad = 0;
+var h = 0;
+ctx.moveTo(redLine[0].x, redLine[0].y);
+
+document.getElementById("hour").innerHTML = "0:00";
 
 function matchTrip(origin, dest, t) {
   return t.origin == origin && t.dest == dest;
@@ -52,10 +54,6 @@ function getStationIndex(line, station) {
   }).indexOf(station);
   return i;
 }
-
-// filter down redLineRiders json to only Southbound trips
-var redLineRidersSouthBound = redLineRiders.filter(isSouthBound);
-// console.log("redLineRidersSouthBound: " + JSON.stringify(redLineRidersSouthBound));
 
 function isOnRed(t) {
   // is trip object t's origin  == to any of redLine's stations?
@@ -98,10 +96,6 @@ function tripsHour(hour) {
     return t.hour == hour;
   }
 }
-
-var h = 0;
-var trips = redLineRidersSouthBound.filter(tripsHour(h));
-var s = 0;
 
 // animates each trip
 function animate(time) {
