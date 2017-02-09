@@ -28,16 +28,6 @@ var riders = require("./data/riders.json");
 var trainLoad = 0;
 document.getElementById("hour").innerHTML = "0:00";
 
-
-/* animate each hour
- - loop i through redLineRidersSouthBound array of trip objects
- - animate() first hour while redLineRidersSouthBound.hour == i
- - (slowly) reset the canvas
- - i++
- - animate() next hour where i is 1
-
-*/
-
 var redLine = coordinates[0].red;
 var redLineRiders = riders.filter(isOnRed);
 // console.log("redLineRiders: " + JSON.stringify(redLineRiders));
@@ -109,11 +99,6 @@ function tripsHour(hour) {
   }
 }
 
-var doIt = new Promise(function(resolve, reject) {
-  resolve(0);
-  startAnim();
-});
-
 var h = 0;
 var trips = redLineRidersSouthBound.filter(tripsHour(h));
 var s = 0;
@@ -176,20 +161,8 @@ function animate(time) {
   }
 }
 
-// function bartFlow() {
-//   for (var h = 0; h < 5; h++) {
-//     // create new object array where hour is current hour
-//     var trips = redLineRidersSouthBound.filter(tripsHour(h));
-//     console.log("trips: " + h + JSON.stringify(trips));
-//     startAnim(trips);
-//   }
-// }
-
 function startAnim(trips) {
-  // console.log("startAnim trips: " + JSON.stringify(trips));
-  // console.log("startAnim");
   requestAnimationFrame(animate);
 };
 
-// bartFlow();
-// startAnim();
+startAnim();
