@@ -11,21 +11,24 @@ var svg = d3.select("#line")
   .attr("xmlns", "http://www.w3.org/2000/svg");
 
 var coordinates;
+var blue;
 var riders;
 var error;
 
 queue()
     .defer(d3.json, "coordinates.json")
+    .defer(d3.json, "blue.json")
     .defer(d3.json, "riders.json")
-    .await(ready);
+    .awaitAll(ready);
 
-function ready(error, coordinatesJSON, ridersJSON) {
-  error = error;
+function ready(error, coordinatesJSON, blueJSON, ridersJSON) {
   coordinates = coordinatesJSON;
+  blue = blueJSON;
   riders = ridersJSON;
   console.log("coordinates: " + JSON.stringify(coordinates));
   draw();
 }
+
 
 var h = 0;
 function draw() {

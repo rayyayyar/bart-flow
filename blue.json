@@ -1,0 +1,92 @@
+[
+    {
+      "station": "DUBL", 
+      "x": 670, 
+      "y": 472 
+    },
+    {
+      "station": "WDUB", 
+      "x": 618, 
+      "y": 472 
+    },
+    {
+      "station": "CAST", 
+      "x": 538, 
+      "y": 472 
+    },
+    {
+      "station": "BAYF", 
+      "x": 470, 
+      "y": 430 
+    },
+    {
+      "station": "SANL", 
+      "x": 456, 
+      "y": 410 
+    },
+    {
+      "station": "COLS", 
+      "x": 443, 
+      "y": 389 
+    },
+    {
+      "station": "FTVL", 
+      "x": 430, 
+      "y": 368 
+    },
+    {
+      "station": "LAKE", 
+      "x": 413, 
+      "y": 342 
+    },
+    {
+      "station": "WOAK", 
+      "x": 351, 
+      "y": 342 
+    },
+    {
+      "station": "EMBR", 
+      "x": 252, 
+      "y": 361 
+    },
+    {
+      "station": "MONT",
+      "x": 242,
+      "y": 378 
+    },
+    {
+      "station": "POWL", 
+      "x": 230, 
+      "y": 397 
+    },
+    {
+      "station": "CIVC", 
+      "x": 218, 
+      "y": 417 
+    },
+    {
+      "station": "16TH", 
+      "x": 208, 
+      "y": 436 
+    },
+    {
+      "station": "24TH", 
+      "x": 195, 
+      "y": 457 
+    },
+    {
+      "station": "GLEN", 
+      "x": 185, 
+      "y": 474 
+    },
+    {
+      "station": "BALB", 
+      "x": 175, 
+      "y": 491 
+    },
+    {
+      "station": "DALY", 
+      "x": 164, 
+      "y": 509 
+    },
+]
