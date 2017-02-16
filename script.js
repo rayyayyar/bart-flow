@@ -34,19 +34,6 @@ function draw() {
     .x(function(d) { return d.x;  })
     .y(function(d) { return d.y; });
 
-  var circles = d3.select("svg").selectAll("circle")
-    .data(coordinates)
-    .enter()
-    .append("circle")
-    .attr("cx", function(d, i) {
-      return d.x;
-    })
-    .attr("cy", function(d) {
-      return d.y;
-    })
-    .attr("r", 2)
-    .attr("fill", "steelblue");
-
   var temp = [];
   var time = 0;
   var totalTime = 0;
@@ -57,10 +44,6 @@ function draw() {
   // filter ridership data to direction NB or SB
   var redLineRidersSouthBound = redLineRiders.filter(isSouthBound);
   var trips = redLineRidersSouthBound.filter(tripsHour(h));
-
-  function matchTrip(origin, dest, t) {
-    return t.origin == origin && t.dest == dest;
-  }
 
   function isSouthBound(t) {
     // assumes coordinate data is always listed north to south
@@ -131,7 +114,7 @@ function draw() {
     
     var paths = svg.append("path")
       .attr("d", line(temp))
-      .attr("stroke", "steelblue")
+      .attr("stroke", "#ED1C24")
       .attr("stroke-linecap", "round")
       .attr("stroke-width", function(d, index) { 
         // return ridership data for each path
@@ -144,15 +127,23 @@ function draw() {
     var n = 0;
     paths.attr("stroke-dasharray", totalLength + " " + totalLength)
         .attr("stroke-dashoffset", totalLength)
+        .attr("opacity", 1.0)
         .transition()
           .delay(totalTime)
           .duration(time)
           .ease(d3.easeLinear)
           .attr("stroke-dashoffset", 0)
-          .on("end", function(d) { 
+          .on("end", function(d) {
             console.log("end transition");
             console.log("n: " + n);
             console.log("hour: " + h);
+            // var path = d3.select(this);
+            console.log("this: " + this);
+            d3.select(this)
+              .transition()
+                .delay(0)
+                .duration(7000)
+                .attr("opacity", 0.05);
             n++
             if (n >= i) { endAll(); }
           });
@@ -162,7 +153,7 @@ function draw() {
 
   function endAll() {
     console.log("this is the end");
-    if (h < 10) {
+    if (h < 20) {
       h++;
       draw();
     }
