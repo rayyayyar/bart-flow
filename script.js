@@ -1,17 +1,3 @@
-console.log("Starting a d3 experiment");
-
-/*
-currently,
-
-load data
-after loading data,
-  draw a train line
-    massage data to get correct set of trips and ridership data, all per hour 
-    start animating each individual path, each delayed by `time`
-    after finishing all individual paths,
-  if there are more hours, add an hour and draw next train line
-*/
-
 var filenames = [
   "red.json", 
   "blue.json",
@@ -33,6 +19,7 @@ var hRed = 0;
 var hBlue = 0;
 var hOrange = 0;
 var trainLoad = 0;
+var endCount = 0;
 var line =  d3.line()
   .x(function(d) { return d.x;  })
   .y(function(d) { return d.y; });
@@ -178,19 +165,33 @@ function draw(lineColor, h) {
             ++n;
             // when all paths are drawn on a trainline
             if (n >= i) {
-              endAll(lineColor, h);
+              endAll(lineColor);
             }
           });
 
     totalTime += time;
   }
 
-  function endAll(lineColor, h) {
+  function endAll(lineColor) {
+    
     console.log("this is the end");
     if (h < 24) {
-      if (lineColor == red) { hRed++; draw(red, hRed); }
-      else if (lineColor == blue) { hBlue++; draw(blue, hBlue);}
-      else if (lineColor == orange) { hOrange++; draw(orange, hOrange);}
+      console.log("lineColor: " + JSON.stringify(lineColor));
+      if ((lineColor == red)||(lineColor == blue)||(lineColor == orange)) {
+        ++endCount;
+        console.log("endCount: " + endCount);
+        if (endCount >= 3) {
+          ++h;
+          draw(red, h);
+          draw(blue, h);
+          draw(orange, h);
+          endCount = 0;
+        }
+      }
+      // if (lineColor == red) { hRed++; draw(red, hRed); }
+      // else if (lineColor == blue) { hBlue++; draw(blue, hBlue);}
+      // else if (lineColor == orange) { hOrange++; draw(orange, hOrange);}
     }
   }
 }
+
