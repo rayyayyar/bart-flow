@@ -1,6 +1,9 @@
 console.log("Starting a d3 experiment");
-
-d3.select("body").style("background-color", "white");
+var filenames = [
+  "red.json", 
+  "blue.json", 
+  "riders.json"
+  ];
 
 //append svg to div#line
 var svg = d3.select("#line")
@@ -10,37 +13,35 @@ var svg = d3.select("#line")
   .attr("id", "visualization")
   .attr("xmlns", "http://www.w3.org/2000/svg");
 
-var coordinates;
-var blue;
-var riders;
-var error;
-
-queue()
-    .defer(d3.json, "coordinates.json")
-    .defer(d3.json, "blue.json")
-    .defer(d3.json, "riders.json")
-    .awaitAll(ready);
-
-function ready(error, coordinatesJSON, blueJSON, ridersJSON) {
-  coordinates = coordinatesJSON;
-  blue = blueJSON;
-  riders = ridersJSON;
-  console.log("coordinates: " + JSON.stringify(coordinates));
-  draw();
-}
-
-
+var queue = d3.queue();
+var red, blue, riders;
 var h = 0;
-function draw() {
+var line =  d3.line()
+  .x(function(d) { return d.x;  })
+  .y(function(d) { return d.y; });
+
+filenames.forEach(function(filename) {
+  queue.defer(d3.json, filename);
+});
+
+queue.awaitAll(function(error, jsonData) {
+  if (error) throw error;
+  red = jsonData[0];
+  blue = jsonData[1];
+  riders = jsonData[2];
+  draw();
+  console.log("ready");
+});
+
+d3.select("body").style("background-color", "white");
+
+function draw(coordinates) {
+  var coordinates = red;
   console.log("draw hour " + h);
-  var line =  d3.line()
-    .x(function(d) { return d.x;  })
-    .y(function(d) { return d.y; });
 
   var temp = [];
   var time = 0;
   var totalTime = 0;
-  
   
   // filter ridership data to only trips on a specific line (red, blue, green, etc)
   var redLineRiders = riders.filter(isOnRed);
@@ -103,7 +104,6 @@ function draw() {
   }
   console.log("trips: " + JSON.stringify(trips));
 
-
   var trainLoad = 0;
   for(var i = 0; i < coordinates.length - 1; ++i) {
     temp[0] = coordinates[i];
@@ -120,7 +120,6 @@ function draw() {
       .attr("stroke", "#ED1C24")
       .attr("stroke-linecap", "round")
       .attr("stroke-width", function(d, index) { 
-        // return ridership data for each path
         return Math.max(trainLoad / 300, .12);
       })
       .attr("fill", "none");
@@ -137,10 +136,8 @@ function draw() {
           .ease(d3.easeLinear)
           .attr("stroke-dashoffset", 0)
           .on("end", function(d) {
-            console.log("end transition");
             console.log("n: " + n);
             console.log("hour: " + h);
-            // var path = d3.select(this);
             console.log("this: " + this);
             d3.select(this)
               .transition()
