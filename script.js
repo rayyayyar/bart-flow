@@ -1,4 +1,17 @@
 console.log("Starting a d3 experiment");
+
+/*
+currently,
+
+load data
+after loading data,
+  draw a train line
+    massage data to get correct set of trips and ridership data, all per hour 
+    start animating each individual path, each delayed by `time`
+    after finishing all individual paths,
+  if there are more hours, add an hour and draw next train line
+*/
+
 var filenames = [
   "red.json", 
   "blue.json", 
@@ -15,7 +28,9 @@ var svg = d3.select("#line")
 
 var queue = d3.queue();
 var red, blue, riders;
-var h = 0;
+var hBlue = 0;
+var hRed = 0;
+var trainLoad = 0;
 var line =  d3.line()
   .x(function(d) { return d.x;  })
   .y(function(d) { return d.y; });
@@ -29,25 +44,25 @@ queue.awaitAll(function(error, jsonData) {
   red = jsonData[0];
   blue = jsonData[1];
   riders = jsonData[2];
-  draw();
+  draw(blue, hBlue);
   console.log("ready");
 });
 
 d3.select("body").style("background-color", "white");
 
-function draw(coordinates) {
-  var coordinates = red;
+function draw(lineColor, h) {
   console.log("draw hour " + h);
-
+  var coordinates = lineColor;
+  console.log("coordinates: " + JSON.stringify(coordinates));
   var temp = [];
   var time = 0;
   var totalTime = 0;
   
   // filter ridership data to only trips on a specific line (red, blue, green, etc)
-  var redLineRiders = riders.filter(isOnRed);
+  var lineRiders = riders.filter(isOnLine);
   // filter ridership data to direction NB or SB
-  var redLineRidersSouthBound = redLineRiders.filter(isSouthBound);
-  var trips = redLineRidersSouthBound.filter(tripsHour(h));
+  var lineRidersSB = lineRiders.filter(isSouthBound);
+  var trips = lineRidersSB.filter(tripsHour(h));
 
   function isSouthBound(t) {
     // assumes coordinate data is always listed north to south
@@ -61,7 +76,7 @@ function draw(coordinates) {
     return i;
   }
 
-  function isOnRed(t) {
+  function isOnLine(t) {
     // is trip object t's origin  == to any of coordinates's stations?
     for (var i = 0; i < coordinates.length; i++) {
       if (t.origin == coordinates[i].station) {
@@ -104,7 +119,7 @@ function draw(coordinates) {
   }
   console.log("trips: " + JSON.stringify(trips));
 
-  var trainLoad = 0;
+  // loop through to draw each trip individually until the end of coordinates
   for(var i = 0; i < coordinates.length - 1; ++i) {
     temp[0] = coordinates[i];
     temp[1] = coordinates[i+1];
@@ -117,7 +132,8 @@ function draw(coordinates) {
     
     var paths = svg.append("path")
       .attr("d", line(temp))
-      .attr("stroke", "#ED1C24")
+      .attr("stroke", "steelblue")
+      // #ED1C24 for red
       .attr("stroke-linecap", "round")
       .attr("stroke-width", function(d, index) { 
         return Math.max(trainLoad / 300, .12);
@@ -129,7 +145,7 @@ function draw(coordinates) {
     var n = 0;
     paths.attr("stroke-dasharray", totalLength + " " + totalLength)
         .attr("stroke-dashoffset", totalLength)
-        .attr("opacity", 1.0)
+        .attr("opacity", 1.0);
         .transition()
           .delay(totalTime)
           .duration(time)
@@ -143,19 +159,20 @@ function draw(coordinates) {
               .transition()
                 .delay(0)
                 .duration(7000)
-                .attr("opacity", 0.05);
-            n++
-            if (n >= i) { endAll(); }
+                .attr("opacity", 0.01);
+            ++n;
+            if (n >= i) { endAll(h); }
           });
 
     totalTime += time;
   }
 
-  function endAll() {
+  function endAll(h) {
     console.log("this is the end");
-    if (h < 20) {
+    if (h < 10) {
       h++;
-      draw();
+      draw(blue);
+      draw(red);
     }
   }
 }
