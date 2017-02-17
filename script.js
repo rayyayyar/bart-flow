@@ -14,7 +14,8 @@ after loading data,
 
 var filenames = [
   "red.json", 
-  "blue.json", 
+  "blue.json",
+  "orange.json",
   "riders.json"
   ];
 
@@ -27,9 +28,10 @@ var svg = d3.select("#line")
   .attr("xmlns", "http://www.w3.org/2000/svg");
 
 var queue = d3.queue();
-var red, blue, riders;
-var hBlue = 0;
+var red, blue, orange, riders;
 var hRed = 0;
+var hBlue = 0;
+var hOrange = 0;
 var trainLoad = 0;
 var line =  d3.line()
   .x(function(d) { return d.x;  })
@@ -43,9 +45,11 @@ queue.awaitAll(function(error, jsonData) {
   if (error) throw error;
   red = jsonData[0];
   blue = jsonData[1];
-  riders = jsonData[2];
-  draw(blue, hBlue);
+  orange = jsonData[2]
+  riders = jsonData[3];
   draw(red, hRed);
+  draw(orange, hOrange);
+  draw(blue, hBlue);
   console.log("ready");
 });
 
@@ -140,6 +144,9 @@ function draw(lineColor, h) {
         else if (lineColor == red) {
           return "#ED1C24";
         }
+        else if (lineColor == orange) {
+          return "#ED9F1B";
+        }
       })
       .attr("stroke-linecap", "round")
       .attr("stroke-width", function(d, index) { 
@@ -166,7 +173,7 @@ function draw(lineColor, h) {
               .transition()
                 .delay(0)
                 .duration(7000)
-                .attr("opacity", 0.01);
+                .attr("opacity", 0.02);
             ++n;
             // when all paths are drawn on a trainline
             if (n >= i) {
@@ -179,9 +186,10 @@ function draw(lineColor, h) {
 
   function endAll(lineColor, h) {
     console.log("this is the end");
-    if (h < 10) {
-      if (lineColor == blue) { hBlue++; draw(blue, hBlue); }
-      else if (lineColor == red) { hRed++; draw(red, hRed);}
+    if (h < 24) {
+      if (lineColor == red) { hRed++; draw(red, hRed); }
+      else if (lineColor == blue) { hBlue++; draw(blue, hBlue);}
+      else if (lineColor == orange) { hOrange++; draw(orange, hOrange);}
     }
   }
 }

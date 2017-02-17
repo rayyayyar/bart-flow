@@ -1,0 +1,87 @@
+[
+      {
+        "station": "RICH", 
+        "x": 344, 
+        "y": 116 
+      },
+      {
+        "station": "DELN", 
+        "x": 356, 
+        "y": 140 
+      },
+      {
+        "station": "PLZA", 
+        "x": 366, 
+        "y": 160 
+      },
+      {
+        "station": "NBRK", 
+        "x": 378, 
+        "y": 182 
+      },
+      {
+        "station": "DBRK", 
+        "x": 389, 
+        "y": 202 
+      },
+      {
+        "station": "ASHB", 
+        "x": 406, 
+        "y": 234 
+      },
+      {
+        "station": "MCAR", 
+        "x": 402, 
+        "y": 271 
+      },
+      {
+        "station": "19TH", 
+        "x": 400, 
+        "y": 295 
+      },
+      {
+        "station": "12TH", 
+        "x": 398, 
+        "y": 313 
+      },
+      {
+        "station": "LAKE", 
+        "x": 406, 
+        "y": 351 
+      },
+      {
+        "station": "FTVL", 
+        "x": 421, 
+        "y": 375 
+      },
+      {
+        "station": "COLS",
+        "x": 433,
+        "y": 394 
+      },
+      {
+        "station": "SANL", 
+        "x": 446, 
+        "y": 414 
+      },
+      {
+        "station": "BAYF", 
+        "x": 460, 
+        "y": 436 
+      },
+      {
+        "station": "SHAY", 
+        "x": 529, 
+        "y": 543 
+      },
+      {
+        "station": "UCTY", 
+        "x": 562, 
+        "y": 592 
+      },
+      {
+        "station": "FRMT", 
+        "x": 614, 
+        "y": 669 
+      }
+]
