@@ -128,7 +128,7 @@ function draw(lineColor, h) {
   for(var i = 0; i < coordinates.length - 1; ++i) {
     temp[0] = coordinates[i];
     temp[1] = coordinates[i+1];
-    time = 250;
+    time = 500;
     var origin = temp[0].station;
     var dest = temp[1].station;
     trainLoad += sumBoard(trips, origin) - sumExits(trips, dest);
@@ -172,7 +172,8 @@ function draw(lineColor, h) {
             d3.select(this)
               .transition()
                 .delay(0)
-                .duration(7000)
+                .duration(3000)
+                .ease(d3.easeLinear)
                 .attr("opacity", 0.02);
             ++n;
             // when all paths are drawn on a trainline
