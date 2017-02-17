@@ -45,6 +45,7 @@ queue.awaitAll(function(error, jsonData) {
   blue = jsonData[1];
   riders = jsonData[2];
   draw(blue, hBlue);
+  draw(red, hRed);
   console.log("ready");
 });
 
@@ -145,7 +146,7 @@ function draw(lineColor, h) {
     var n = 0;
     paths.attr("stroke-dasharray", totalLength + " " + totalLength)
         .attr("stroke-dashoffset", totalLength)
-        .attr("opacity", 1.0);
+        .attr("opacity", 1.0)
         .transition()
           .delay(totalTime)
           .duration(time)
@@ -161,18 +162,20 @@ function draw(lineColor, h) {
                 .duration(7000)
                 .attr("opacity", 0.01);
             ++n;
-            if (n >= i) { endAll(h); }
+            // when all paths are drawn on a trainline
+            if (n >= i) {
+              endAll(lineColor, h);
+            }
           });
 
     totalTime += time;
   }
 
-  function endAll(h) {
+  function endAll(lineColor, h) {
     console.log("this is the end");
     if (h < 10) {
-      h++;
-      draw(blue);
-      draw(red);
+      if (lineColor == blue) { hBlue++; draw(blue, hBlue); }
+      else if (lineColor == red) { hRed++; draw(red, hRed);}
     }
   }
 }
