@@ -133,8 +133,14 @@ function draw(lineColor, h) {
     
     var paths = svg.append("path")
       .attr("d", line(temp))
-      .attr("stroke", "steelblue")
-      // #ED1C24 for red
+      .attr("stroke", function() {
+        if (lineColor == blue) {
+          return "#00AEEF";
+        }
+        else if (lineColor == red) {
+          return "#ED1C24";
+        }
+      })
       .attr("stroke-linecap", "round")
       .attr("stroke-width", function(d, index) { 
         return Math.max(trainLoad / 300, .12);
