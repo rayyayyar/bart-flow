@@ -3,6 +3,7 @@ var filenames = [
   "blue.json",
   "orange.json",
   "yellow.json",
+  "green.json",
   "riders.json"
   ];
 
@@ -33,12 +34,14 @@ queue.awaitAll(function(error, jsonData) {
   red = jsonData[0];
   blue = jsonData[1];
   orange = jsonData[2];
-  yellow = jsonData[3]
-  riders = jsonData[4];
+  yellow = jsonData[3];
+  green = jsonData[4];
+  riders = jsonData[5];
   draw(red, h);
   draw(orange, h);
   draw(blue, h);
   draw(yellow, h);
+  draw(green, h);
   console.log("ready");
 });
 
@@ -139,6 +142,9 @@ function draw(lineColor, h) {
         else if (lineColor == yellow) {
           return "#FFDE00";
         }
+        else if (lineColor == green) {
+          return "#4DB848";
+        }
       })
       .attr("stroke-linecap", "round")
       .attr("stroke-width", function(d, index) { 
@@ -164,9 +170,9 @@ function draw(lineColor, h) {
             d3.select(this)
               .transition()
                 .delay(0)
-                .duration(3000)
+                .duration(1000)
                 .ease(d3.easeLinear)
-                .attr("opacity", 0.5);
+                .attr("opacity", 0.01);
             ++n;
             // when all paths are drawn on a trainline
             if (n >= i) {
@@ -181,15 +187,16 @@ function draw(lineColor, h) {
     console.log("this is the end");
     if (h < 24) {
       console.log("lineColor: " + JSON.stringify(lineColor));
-      if ((lineColor == red)||(lineColor == blue)||(lineColor == orange)||(lineColor == yellow)) {
+      if ((lineColor == red)||(lineColor == blue)||(lineColor == orange)||(lineColor == yellow)||(lineColor == green)) {
         ++endCount;
         console.log("endCount: " + endCount);
-        if (endCount >= 4) {
+        if (endCount >= 5) {
           ++h;
           draw(red, h);
           draw(blue, h);
           draw(orange, h);
           draw(yellow, h);
+          draw(green, h);
           endCount = 0;
         }
       }
