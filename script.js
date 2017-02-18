@@ -47,8 +47,27 @@ queue.awaitAll(function(error, jsonData) {
 
 d3.select("body").style("background-color", "white");
 
+var timerCount = 0;
+var ms = 12500 / 60;
+function timer() {
+  if (timerCount < 60) {
+    document.getElementById("minutes").innerHTML = ":" + timerCount;
+    setTimeout(timer, ms);
+    ++timerCount;
+  }
+  else {
+    document.getElementById("minutes").innerHTML = ":" + "00";
+  }
+}
+timer();
+
+function pad(n) {
+    return (n < 10) ? ("0" + n) : n;
+}
+
 function draw(lineColor, h) {
   console.log("draw hour " + h);
+
   var coordinates = lineColor;
   console.log("coordinates: " + JSON.stringify(coordinates));
   var temp = [];
@@ -166,7 +185,6 @@ function draw(lineColor, h) {
           .on("end", function(d) {
             console.log("n: " + n);
             console.log("hour: " + h);
-            console.log("this: " + this);
             d3.select(this)
               .transition()
                 .delay(0)
@@ -186,12 +204,12 @@ function draw(lineColor, h) {
   function endAll(lineColor) {
     console.log("this is the end");
     if (h < 24) {
-      console.log("lineColor: " + JSON.stringify(lineColor));
       if ((lineColor == red)||(lineColor == blue)||(lineColor == orange)||(lineColor == yellow)||(lineColor == green)) {
         ++endCount;
-        console.log("endCount: " + endCount);
         if (endCount >= 5) {
           ++h;
+          timerCount = 0;
+          document.getElementById("hour").innerHTML = h;
           draw(red, h);
           draw(blue, h);
           draw(orange, h);
@@ -200,9 +218,6 @@ function draw(lineColor, h) {
           endCount = 0;
         }
       }
-      // if (lineColor == red) { hRed++; draw(red, hRed); }
-      // else if (lineColor == blue) { hBlue++; draw(blue, hBlue);}
-      // else if (lineColor == orange) { hOrange++; draw(orange, hOrange);}
     }
   }
 }
