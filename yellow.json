@@ -1,117 +1,132 @@
 [
       {
-        "station": "RICH", 
-        "x": 333, 
-        "y": 120 
+        "station": "PITT", 
+        "x": 630, 
+        "y": 111 
       },
       {
-        "station": "DELN", 
-        "x": 344, 
-        "y": 142 
+        "station": "NCON", 
+        "x": 614, 
+        "y": 141 
       },
       {
-        "station": "PLZA", 
-        "x": 356, 
-        "y": 164 
+        "station": "CONC", 
+        "x": 602, 
+        "y": 163 
       },
       {
-        "station": "NBRK", 
-        "x": 367, 
-        "y": 187 
+        "station": "PHIL", 
+        "x": 591, 
+        "y": 184 
       },
       {
-        "station": "DBRK", 
-        "x": 378, 
-        "y": 209 
+        "station": "WCRK", 
+        "x": 576, 
+        "y": 210 
       },
       {
-        "station": "ASHB", 
-        "x": 391, 
-        "y": 234 
+        "station": "LAFY", 
+        "x": 523, 
+        "y": 222 
+      },
+      {
+        "station": "ORIN", 
+        "x": 477, 
+        "y": 233 
+      },
+      {
+        "station": "ROCK", 
+        "x": 425, 
+        "y": 244 
       },
       {
         "station": "MCAR", 
-        "x": 387, 
-        "y": 269 
+        "x": 413, 
+        "y": 274 
       },
       {
         "station": "19TH", 
-        "x": 384, 
-        "y": 291 
+        "x": 411, 
+        "y": 295 
       },
       {
         "station": "12TH", 
-        "x": 381, 
-        "y": 318 
+        "x": 408, 
+        "y": 329 
       },
       {
-        "station": "WOAK", 
-        "x": 351, 
-        "y": 318 
+        "station": "WOAK",
+        "x": 352,
+        "y": 329 
       },
       {
         "station": "EMBR", 
-        "x": 230, 
-        "y": 347 
+        "x": 239, 
+        "y": 354 
       },
       {
-        "station": "MONT",
-        "x": 219,
-        "y": 366 
+        "station": "MONT", 
+        "x": 230, 
+        "y": 370 
       },
       {
         "station": "POWL", 
-        "x": 208, 
-        "y": 385 
+        "x": 218, 
+        "y": 391 
       },
       {
         "station": "CIVC", 
-        "x": 197, 
-        "y": 404 
+        "x": 207, 
+        "y": 409 
       },
       {
         "station": "16TH", 
-        "x": 184, 
-        "y": 424 
+        "x": 195, 
+        "y": 430 
       },
       {
         "station": "24TH", 
-        "x": 172, 
-        "y": 445 
+        "x": 183, 
+        "y": 450 
       },
       {
         "station": "GLEN", 
-        "x": 162, 
-        "y": 462 
+        "x": 173, 
+        "y": 469 
       },
       {
         "station": "BALB", 
-        "x": 152, 
-        "y": 479 
+        "x": 163, 
+        "y": 485 
       },
       {
         "station": "DALY", 
-        "x": 142, 
-        "y": 497 
+        "x": 153, 
+        "y": 504 
       },
       {
         "station": "COLM", 
-        "x": 147, 
-        "y": 554 
+        "x": 158, 
+        "y": 549 
       },
       {
         "station": "SSAN", 
-        "x": 171, 
-        "y": 590 
+        "x": 181, 
+        "y": 582 
       },
       {
         "station": "SBRN", 
-        "x": 195, 
+        "x": 204, 
+        "y": 616 
+      },
+      {
+        "station": "SFIA", 
+        "x": 242, 
         "y": 623 
       },
       {
         "station": "MLBR", 
-        "x": 227, 
-        "y": 669 
+        "x": 238, 
+        "y": 664 
       }
 ]

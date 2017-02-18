@@ -2,6 +2,7 @@ var filenames = [
   "red.json", 
   "blue.json",
   "orange.json",
+  "yellow.json",
   "riders.json"
   ];
 
@@ -14,12 +15,11 @@ var svg = d3.select("#line")
   .attr("xmlns", "http://www.w3.org/2000/svg");
 
 var queue = d3.queue();
-var red, blue, orange, riders;
-var hRed = 0;
-var hBlue = 0;
-var hOrange = 0;
+var red, blue, orange, yellow, green;
+var riders;
 var trainLoad = 0;
 var endCount = 0;
+var h = 0;
 var line =  d3.line()
   .x(function(d) { return d.x;  })
   .y(function(d) { return d.y; });
@@ -32,11 +32,13 @@ queue.awaitAll(function(error, jsonData) {
   if (error) throw error;
   red = jsonData[0];
   blue = jsonData[1];
-  orange = jsonData[2]
-  riders = jsonData[3];
-  draw(red, hRed);
-  draw(orange, hOrange);
-  draw(blue, hBlue);
+  orange = jsonData[2];
+  yellow = jsonData[3]
+  riders = jsonData[4];
+  draw(red, h);
+  draw(orange, h);
+  draw(blue, h);
+  draw(yellow, h);
   console.log("ready");
 });
 
@@ -134,6 +136,9 @@ function draw(lineColor, h) {
         else if (lineColor == orange) {
           return "#ED9F1B";
         }
+        else if (lineColor == yellow) {
+          return "#FFDE00";
+        }
       })
       .attr("stroke-linecap", "round")
       .attr("stroke-width", function(d, index) { 
@@ -161,7 +166,7 @@ function draw(lineColor, h) {
                 .delay(0)
                 .duration(3000)
                 .ease(d3.easeLinear)
-                .attr("opacity", 0.02);
+                .attr("opacity", 0.5);
             ++n;
             // when all paths are drawn on a trainline
             if (n >= i) {
@@ -173,18 +178,18 @@ function draw(lineColor, h) {
   }
 
   function endAll(lineColor) {
-    
     console.log("this is the end");
     if (h < 24) {
       console.log("lineColor: " + JSON.stringify(lineColor));
-      if ((lineColor == red)||(lineColor == blue)||(lineColor == orange)) {
+      if ((lineColor == red)||(lineColor == blue)||(lineColor == orange)||(lineColor == yellow)) {
         ++endCount;
         console.log("endCount: " + endCount);
-        if (endCount >= 3) {
+        if (endCount >= 4) {
           ++h;
           draw(red, h);
           draw(blue, h);
           draw(orange, h);
+          draw(yellow, h);
           endCount = 0;
         }
       }
