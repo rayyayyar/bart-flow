@@ -15,6 +15,7 @@ var svg = d3.select("#line")
   .attr("id", "visualization")
   .attr("xmlns", "http://www.w3.org/2000/svg");
 
+d3.select("body").style("background-color", "floralwhite");
 var queue = d3.queue();
 var red, blue, orange, yellow, green;
 var linesArray = [];
@@ -39,23 +40,19 @@ queue.awaitAll(function(error, jsonData) {
   green = jsonData[4];
   riders = jsonData[5];
   linesArray = [red, blue, orange, yellow, green];
-  console.log("linesArray.length: " + linesArray.length);
-  console.log("linesArray: " + linesArray);
-  setInterval(function() {
-    if (linesArray.length < 1) { 
-        ++h;
-        linesArray = [red, blue, orange, yellow, green];
+  var interval = setInterval(function() {
+    if (h >= 24) { clearInterval(interval); }
+    if (linesArray.length < 1) {
+      ++h;
+      document.getElementById("hour").innerHTML = h;
+      linesArray = [red, blue, orange, yellow, green];
     }
     var i = Math.floor(Math.random() * linesArray.length);
     draw(linesArray[i], h);
     linesArray.splice(i, 1);
 
-  }, Math.min(Math.random() * 3000, 1000));
-  
-  console.log("ready");
+  }, Math.min(Math.random() * 4000, 2500));
 });
-
-d3.select("body").style("background-color", "floralwhite");
 
 var timerCount = 0;
 var ms = 12500 / 60;
@@ -69,7 +66,6 @@ function timer() {
     document.getElementById("minutes").innerHTML = ":" + "00";
   }
 }
-timer();
 
 function pad(n) {
     return (n < 10) ? ("0" + n) : n;
@@ -77,9 +73,7 @@ function pad(n) {
 
 function draw(lineColor, h) {
   console.log("draw hour " + h);
-
   var coordinates = lineColor;
-  console.log("coordinates: " + JSON.stringify(coordinates));
   var temp = [];
   var time = 0;
   var totalTime = 0;
@@ -138,13 +132,12 @@ function draw(lineColor, h) {
     return ridersCount;
   }
 
-  //filter function to return only trips of a requested hour
+  // filter function to return only trips of a requested hour
   function tripsHour(hour) {
     return function(t) {
       return t.hour == hour;
     }
   }
-  console.log("trips: " + JSON.stringify(trips));
 
   // loop through to draw each trip individually until the end of coordinates
   for(var i = 0; i < coordinates.length - 1; ++i) {
@@ -154,7 +147,7 @@ function draw(lineColor, h) {
     var origin = temp[0].station;
     var dest = temp[1].station;
     trainLoad += sumBoard(trips, origin) - sumExits(trips, dest);
-    console.log(sumBoard(trips, origin) + " get on at " + origin + " and " + sumExits(trips, dest) + " get off at " + dest);
+    console.log("At " + h + ":00, " + sumBoard(trips, origin) + " get on at " + origin + " and " + sumExits(trips, dest) + " get off at " + dest);
     console.log("trainLoad: " + trainLoad);
     
     var paths = svg.append("path")
@@ -194,7 +187,6 @@ function draw(lineColor, h) {
           .ease(d3.easeLinear)
           .attr("stroke-dashoffset", 0)
           .on("end", function(d) {
-            console.log("hour: " + h);
             d3.select(this)
               .transition()
                 .delay(0)
@@ -213,43 +205,7 @@ function draw(lineColor, h) {
   }
 
   function endAll(lineColor) {
-    // a single line has finished
-    console.log("this is the end");
-    console.log("lineColor: " + lineColor);
-    if (h < 24) {
-      // if hours left in day, keep drawing random lines every x seconds until all lines have finished the hour
-      // var i = linesArray.indexOf(lineColor);
-      // linesArray = linesArray.splice(x, 1);
-
-      // if (linesArray.length <= 1) { 
-      //   ++h;
-      //   linesArray = [red, blue, orange, yellow, green];
-      // }
-
-      // whenever a single line ends, draw all remaining lines at random, removing them from lineArray after they are drawn
-      // for (var j = 0; j < linesArray.length; ++j) {
-      //   var i = Math.floor(Math.random() * linesArray.length);
-      //   setTimeout(function() { draw(linesArray[i], h);}, Math.random() * 3000);
-      //   linesArray.splice(i, 1);
-      // }
-      document.getElementById("hour").innerHTML = h;
-
-      // if ((lineColor == red)||(lineColor == blue)||(lineColor == orange)||(lineColor == yellow)||(lineColor == green)) {
-      //   ++endCount;
-      //   if (endCount >= 5) {
-      //     ++h;
-      //     timerCount = 0;
-      //     document.getElementById("hour").innerHTML = h;
-      //     // todo: pick a random line to draw
-      //     setTimeout(function() { draw(red, h); }, Math.random() * 2000);
-      //     setTimeout(function() { draw(blue, h); }, Math.random() * 2000);
-      //     setTimeout(function() { draw(orange, h); }, Math.random() * 2000);
-      //     setTimeout(function() { draw(yellow, h); }, Math.random() * 2000);
-      //     setTimeout(function() { draw(green, h); }, Math.random() * 2000);
-      //     endCount = 0;
-      //   }
-      // }
-    }
+    console.log("A single line has finished.");
   }
 }
 
