@@ -17,6 +17,7 @@ var svg = d3.select("#line")
 
 var queue = d3.queue();
 var red, blue, orange, yellow, green;
+var linesArray = [];
 var riders;
 var trainLoad = 0;
 var endCount = 0;
@@ -37,15 +38,24 @@ queue.awaitAll(function(error, jsonData) {
   yellow = jsonData[3];
   green = jsonData[4];
   riders = jsonData[5];
-  draw(red, h);
-  draw(orange, h);
-  draw(blue, h);
-  draw(yellow, h);
-  draw(green, h);
+  linesArray = [red, blue, orange, yellow, green];
+  console.log("linesArray.length: " + linesArray.length);
+  console.log("linesArray: " + linesArray);
+  setInterval(function() {
+    if (linesArray.length < 1) { 
+        ++h;
+        linesArray = [red, blue, orange, yellow, green];
+    }
+    var i = Math.floor(Math.random() * linesArray.length);
+    draw(linesArray[i], h);
+    linesArray.splice(i, 1);
+
+  }, Math.min(Math.random() * 3000, 1000));
+  
   console.log("ready");
 });
 
-d3.select("body").style("background-color", "white");
+d3.select("body").style("background-color", "floralwhite");
 
 var timerCount = 0;
 var ms = 12500 / 60;
@@ -79,6 +89,7 @@ function draw(lineColor, h) {
   // filter ridership data to direction NB or SB
   var lineRidersSB = lineRiders.filter(isSouthBound);
   var trips = lineRidersSB.filter(tripsHour(h));
+  // todo: consider prepping data for each line beforehand
 
   function isSouthBound(t) {
     // assumes coordinate data is always listed north to south
@@ -139,7 +150,7 @@ function draw(lineColor, h) {
   for(var i = 0; i < coordinates.length - 1; ++i) {
     temp[0] = coordinates[i];
     temp[1] = coordinates[i+1];
-    time = 500;
+    time = 900;
     var origin = temp[0].station;
     var dest = temp[1].station;
     trainLoad += sumBoard(trips, origin) - sumExits(trips, dest);
@@ -183,14 +194,13 @@ function draw(lineColor, h) {
           .ease(d3.easeLinear)
           .attr("stroke-dashoffset", 0)
           .on("end", function(d) {
-            console.log("n: " + n);
             console.log("hour: " + h);
             d3.select(this)
               .transition()
                 .delay(0)
                 .duration(1000)
                 .ease(d3.easeLinear)
-                .attr("opacity", 0.01);
+                .attr("opacity", 0.018);
             ++n;
             // when all paths are drawn on a trainline
             if (n >= i) {
@@ -199,25 +209,46 @@ function draw(lineColor, h) {
           });
 
     totalTime += time;
+    // todo: animate analog clock based on time
   }
 
   function endAll(lineColor) {
+    // a single line has finished
     console.log("this is the end");
+    console.log("lineColor: " + lineColor);
     if (h < 24) {
-      if ((lineColor == red)||(lineColor == blue)||(lineColor == orange)||(lineColor == yellow)||(lineColor == green)) {
-        ++endCount;
-        if (endCount >= 5) {
-          ++h;
-          timerCount = 0;
-          document.getElementById("hour").innerHTML = h;
-          draw(red, h);
-          draw(blue, h);
-          draw(orange, h);
-          draw(yellow, h);
-          draw(green, h);
-          endCount = 0;
-        }
-      }
+      // if hours left in day, keep drawing random lines every x seconds until all lines have finished the hour
+      // var i = linesArray.indexOf(lineColor);
+      // linesArray = linesArray.splice(x, 1);
+
+      // if (linesArray.length <= 1) { 
+      //   ++h;
+      //   linesArray = [red, blue, orange, yellow, green];
+      // }
+
+      // whenever a single line ends, draw all remaining lines at random, removing them from lineArray after they are drawn
+      // for (var j = 0; j < linesArray.length; ++j) {
+      //   var i = Math.floor(Math.random() * linesArray.length);
+      //   setTimeout(function() { draw(linesArray[i], h);}, Math.random() * 3000);
+      //   linesArray.splice(i, 1);
+      // }
+      document.getElementById("hour").innerHTML = h;
+
+      // if ((lineColor == red)||(lineColor == blue)||(lineColor == orange)||(lineColor == yellow)||(lineColor == green)) {
+      //   ++endCount;
+      //   if (endCount >= 5) {
+      //     ++h;
+      //     timerCount = 0;
+      //     document.getElementById("hour").innerHTML = h;
+      //     // todo: pick a random line to draw
+      //     setTimeout(function() { draw(red, h); }, Math.random() * 2000);
+      //     setTimeout(function() { draw(blue, h); }, Math.random() * 2000);
+      //     setTimeout(function() { draw(orange, h); }, Math.random() * 2000);
+      //     setTimeout(function() { draw(yellow, h); }, Math.random() * 2000);
+      //     setTimeout(function() { draw(green, h); }, Math.random() * 2000);
+      //     endCount = 0;
+      //   }
+      // }
     }
   }
 }
