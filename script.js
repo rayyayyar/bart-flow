@@ -18,7 +18,9 @@ var svg = d3.select("#line")
 d3.select("body").style("background-color", "floralwhite");
 var queue = d3.queue();
 var red, blue, orange, yellow, green;
+var redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips;
 var linesArray = [];
+var tripsArray = [];
 var riders;
 var trainLoad = 0;
 var endCount = 0;
@@ -161,6 +163,7 @@ function draw(lineColor, trips) {
     var coordinates = Array.prototype.slice.call(lineColor);
     if(!reverse) coordinates.reverse();
   }
+  else coordinates = lineColor;
 
   var temp = [];
   var time = 0;
@@ -236,12 +239,22 @@ function draw(lineColor, trips) {
       });
 
   }
-  
 
   function update(fade) {
     fadeDuration = fade;
     console.log("duration: " + fade);
   }
+  d3.select("#reverse")
+    .on("click", function() {
+      direction = (direction == "north") ? "south" : "north";
+      console.log("direction: " + direction);
+      redTrips = massage(red, direction);
+      blueTrips = massage(blue, direction);
+      orangeTrips = massage(orange, direction);
+      yellowTrips = massage(yellow, direction);
+      greenTrips = massage(green, direction);
+      tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
+    });
 
 }
 
