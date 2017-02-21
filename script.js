@@ -23,6 +23,7 @@ var riders;
 var trainLoad = 0;
 var endCount = 0;
 var h = 0;
+var redTrips = [];
 var trips;
 var line =  d3.line()
   .x(function(d) { return d.x;  })
@@ -34,6 +35,7 @@ filenames.forEach(function(filename) {
 
 queue.awaitAll(function(error, jsonData) {
   if (error) throw error;
+  // assign coordinate data
   red = jsonData[0];
   blue = jsonData[1];
   orange = jsonData[2];
@@ -42,6 +44,10 @@ queue.awaitAll(function(error, jsonData) {
   riders = jsonData[5];
   var redTrips = massage(red);
   var blueTrips = massage(blue);
+  var orangeTrips = massage(orange);
+  var yellowTrips = massage(yellow);
+  var greenTrips = massage(green);
+  console.log("redTrips: " + JSON.stringify(redTrips));
   linesArray = [red, blue, orange, yellow, green];
   var interval = setInterval(function() {
     if (h >= 24) { clearInterval(interval); }
@@ -51,11 +57,13 @@ queue.awaitAll(function(error, jsonData) {
       linesArray = [red, blue, orange, yellow, green];
     }
     var i = Math.floor(Math.random() * linesArray.length);
-    trips = massagedData(linesArray[i], h);
+    trips = redTrips[h];
+
+    // draw using coordinate data and ridership data for specific line and hour
     draw(linesArray[i], trips);
     linesArray.splice(i, 1);
 
-  }, Math.min(Math.random() * 4000, 2500));
+  }, Math.min(Math.random() * 4000, 6500));
 });
 
 
@@ -70,36 +78,49 @@ function massage(line) {
   var lineRiders = riders.filter(isOnLine);
   // filter ridership data to direction NB or SB
   var lineRidersSB = lineRiders.filter(isSouthBound);
-  var trips = lineRidersSB.filter(tripsHour(h));
+  // console.log(JSON.stringify(lineRidersSB));
+  var trips = [];
+  for (var h = 0; h <24; ++h) {
+    var tripsPerHour = lineRidersSB.filter(tripsHour(h));
+    trips.push(tripsPerHour);
+  }  
   return trips;
   //returns trips for all hours on a line
 
-}
-
-function isSouthBound(t) {
-  // assumes coordinate data is always listed north to south
-  return getStationIndex(coordinates, t.origin) < getStationIndex(coordinates, t.dest);
-}
-
-function getStationIndex(line, station) {
-  var i = line.map(function(e) {
-    return e.station;
-  }).indexOf(station);
-  return i;
-}
-
-function isOnLine(t) {
-  // is trip object t's origin  == to any of coordinates's stations?
-  for (var i = 0; i < coordinates.length; i++) {
-    if (t.origin == coordinates[i].station) {
-      for (var i = 0; i < coordinates.length; i++) {
-        if (t.dest == coordinates[i].station) {
-          return true;
+  function isOnLine(t) {
+    // is trip object t's origin  == to any of coordinates's stations?
+    for (var i = 0; i < coordinates.length; i++) {
+      if (t.origin == coordinates[i].station) {
+        for (var i = 0; i < coordinates.length; i++) {
+          if (t.dest == coordinates[i].station) {
+            return true;
+          }
         }
       }
     }
   }
+
+  function isSouthBound(t) {
+    // assumes coordinate data is always listed north to south
+    return getStationIndex(coordinates, t.origin) < getStationIndex(coordinates, t.dest);
+  }
+
+  function getStationIndex(line, station) {
+    var i = line.map(function(e) {
+      return e.station;
+    }).indexOf(station);
+    return i;
+  }
+
+  // filter function to return only trips of a requested hour
+  function tripsHour(hour) {
+    return function(t) {
+      return t.hour == hour;
+    }
+  }
+
 }
+
 
 // sum all riders that board at an origin station that's on a specific line
 function sumBoard (line, origin) {
@@ -123,21 +144,12 @@ function sumExits (trips, dest) {
   return ridersCount;
 }
 
-// filter function to return only trips of a requested hour
-function tripsHour(hour) {
-  return function(t) {
-    return t.hour == hour;
-  }
-}
-
 function draw(lineColor, trips) {
   console.log("draw hour " + h);
   var coordinates = lineColor;
   var temp = [];
   var time = 0;
   var totalTime = 0;
-
-  // massaged data returning 'trips' variable
 
   // loop through to draw each trip individually until the end of coordinates
   for(var i = 0; i < coordinates.length - 1; ++i) {
@@ -146,9 +158,11 @@ function draw(lineColor, trips) {
     time = 900;
     var origin = temp[0].station;
     var dest = temp[1].station;
+
     trainLoad += sumBoard(trips, origin) - sumExits(trips, dest);
     console.log("At " + h + ":00, " + sumBoard(trips, origin) + " get on at " + origin + " and " + sumExits(trips, dest) + " get off at " + dest);
     console.log("trainLoad: " + trainLoad);
+
     
     var paths = svg.append("path")
       .attr("d", line(temp))
