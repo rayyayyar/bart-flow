@@ -27,7 +27,8 @@ var redTrips = [];
 var trips;
 var line =  d3.line()
   .x(function(d) { return d.x;  })
-  .y(function(d) { return d.y; });
+  .y(function(d) { return d.y; })
+  .curve(d3.curveCatmullRom);
 
 filenames.forEach(function(filename) {
   queue.defer(d3.json, filename);
@@ -192,7 +193,6 @@ function draw(lineColor, trips) {
 
     var totalLength = paths.node().getTotalLength();
 
-    var n = 0;
     paths.attr("stroke-dasharray", totalLength + " " + totalLength)
         .attr("stroke-dashoffset", totalLength)
         .attr("opacity", 1.0)
@@ -208,19 +208,10 @@ function draw(lineColor, trips) {
                 .duration(1000)
                 .ease(d3.easeLinear)
                 .attr("opacity", 0.018);
-            ++n;
-            // when all paths are drawn on a trainline
-            if (n >= i) {
-              endAll(lineColor);
-            }
           });
 
     totalTime += time;
     // todo: animate analog clock based on time
-  }
-
-  function endAll(lineColor) {
-    console.log("A single line has finished.");
   }
 }
 
