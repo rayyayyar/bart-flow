@@ -23,8 +23,8 @@ var riders;
 var trainLoad = 0;
 var endCount = 0;
 var h = 0;
-var redTrips = [];
 var trips;
+var direction;
 var fadeDuration = 1000;
 var line =  d3.line()
   .x(function(d) { return d.x;  })
@@ -47,11 +47,12 @@ queue.awaitAll(function(error, jsonData) {
   linesArray = [red, blue, orange, yellow, green];
 
   // assign massaged ridership data per line
-  var redTrips = massage(red);
-  var blueTrips = massage(blue);
-  var orangeTrips = massage(orange);
-  var yellowTrips = massage(yellow);
-  var greenTrips = massage(green);
+  direction = "north";
+  var redTrips = massage(red, direction);
+  var blueTrips = massage(blue, direction);
+  var orangeTrips = massage(orange, direction);
+  var yellowTrips = massage(yellow, direction);
+  var greenTrips = massage(green, direction);
   var tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
   
   var interval = setInterval(function() {
@@ -63,8 +64,6 @@ queue.awaitAll(function(error, jsonData) {
       tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
     }
     var i = Math.floor(Math.random() * linesArray.length);
-    console.log("trips: " + JSON.stringify(trips));
-
     // draw using coordinate data and ridership data for specific line and hour
     draw(linesArray[i], tripsArray[i][h]);
     linesArray.splice(i, 1);
@@ -74,16 +73,21 @@ queue.awaitAll(function(error, jsonData) {
 });
 
 
-function massage(line) {
+function massage(line, direction) {  
   var coordinates = line;
-  // filter ridership data to only trips on a specific line (red, blue, green, etc)
-  var lineRiders = riders.filter(isOnLine);
+  
   // filter ridership data to direction NB or SB
-  var lineRidersSB = lineRiders.filter(isSouthBound);
-  // console.log(JSON.stringify(lineRidersSB));
+  if (direction == "north") {
+    // filter ridership data to only trips on a specific line (red, blue, green, etc)
+    var lineRidersBound = riders.filter(isOnLine).filter(isNorthBound);
+    console.log("lineRidersBound North: " + JSON.stringify(lineRidersBound));
+  }
+  else if (direction == "south") {
+    var lineRidersBound = riders.filter(isOnLine).filter(isSouthBound);
+  }
   var trips = [];
   for (var h = 0; h <24; ++h) {
-    var tripsPerHour = lineRidersSB.filter(tripsHour(h));
+    var tripsPerHour = lineRidersBound.filter(tripsHour(h));
     trips.push(tripsPerHour);
   }  
   return trips;
@@ -105,6 +109,10 @@ function massage(line) {
   function isSouthBound(t) {
     // assumes coordinate data is always listed north to south
     return getStationIndex(coordinates, t.origin) < getStationIndex(coordinates, t.dest);
+  }
+
+  function isNorthBound(t) {
+    return getStationIndex(coordinates, t.origin) > getStationIndex(coordinates, t.dest);
   }
 
   function getStationIndex(line, station) {
@@ -148,7 +156,8 @@ function sumExits (trips, dest) {
 function draw(lineColor, trips) {
   console.log("draw hour " + h);
   console.log("trips: " + JSON.stringify(trips));
-  var coordinates = lineColor;
+  var coordinates = lineColor.reverse();
+
   var temp = [];
   var time = 0;
   var totalTime = 0;
