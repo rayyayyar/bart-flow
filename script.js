@@ -25,6 +25,7 @@ var endCount = 0;
 var h = 0;
 var redTrips = [];
 var trips;
+var fadeDuration = 1000;
 var line =  d3.line()
   .x(function(d) { return d.x;  })
   .y(function(d) { return d.y; })
@@ -205,7 +206,7 @@ function draw(lineColor, trips) {
             d3.select(this)
               .transition()
                 .delay(0)
-                .duration(1000)
+                .duration(fadeDuration)
                 .ease(d3.easeLinear)
                 .attr("opacity", 0.018);
           });
@@ -213,5 +214,21 @@ function draw(lineColor, trips) {
     totalTime += time;
     // todo: animate analog clock based on time
   }
+
+  if (h > 1) {
+    d3.select("#fade")
+      .attr("class", "show")
+      .on("input", function() {
+        update(+this.value);
+      });
+
+  }
+  
+
+  function update(fade) {
+    fadeDuration = fade;
+    console.log("duration: " + fade);
+  }
+
 }
 

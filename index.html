@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<style>
+		.show { visibility: visible; opacity: 1.0; transition: all 2s;}
+		.hidden { visibility: hidden; opacity: 0.0; }
+	</style>
 </head>
 <body>
 	<span id="hour">00</span><span id="minutes">:00</span>
@@ -8,6 +12,7 @@
   <script type="text/javascript" src="http://d3js.org/d3.v4.js"></script>
   <script src="http://d3js.org/queue.v1.min.js"></script>
   <script type="text/javascript" src="script.js"></script>
+  <input type="range" min="50" max="7000" id="fade" class="hidden" >
   </script>
 </body>
 </html>
