@@ -156,7 +156,11 @@ function sumExits (trips, dest) {
 function draw(lineColor, trips) {
   console.log("draw hour " + h);
   console.log("trips: " + JSON.stringify(trips));
-  var coordinates = lineColor.reverse();
+  if (direction == "north") {
+    var reverse = reverse || false;
+    var coordinates = Array.prototype.slice.call(lineColor);
+    if(!reverse) coordinates.reverse();
+  }
 
   var temp = [];
   var time = 0;
