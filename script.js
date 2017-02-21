@@ -42,37 +42,37 @@ queue.awaitAll(function(error, jsonData) {
   yellow = jsonData[3];
   green = jsonData[4];
   riders = jsonData[5];
+  linesArray = [red, blue, orange, yellow, green];
+
+  // assign massaged ridership data per line
   var redTrips = massage(red);
   var blueTrips = massage(blue);
   var orangeTrips = massage(orange);
   var yellowTrips = massage(yellow);
   var greenTrips = massage(green);
-  console.log("redTrips: " + JSON.stringify(redTrips));
-  linesArray = [red, blue, orange, yellow, green];
+  var tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
+  
   var interval = setInterval(function() {
-    if (h >= 24) { clearInterval(interval); }
+    if (h >= 23) { clearInterval(interval); }
     if (linesArray.length < 1) {
       ++h;
       document.getElementById("hour").innerHTML = h;
       linesArray = [red, blue, orange, yellow, green];
+      tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
     }
     var i = Math.floor(Math.random() * linesArray.length);
-    trips = redTrips[h];
+    console.log("trips: " + JSON.stringify(trips));
 
     // draw using coordinate data and ridership data for specific line and hour
-    draw(linesArray[i], trips);
+    draw(linesArray[i], tripsArray[i][h]);
     linesArray.splice(i, 1);
+    tripsArray.splice(i, 1);
 
-  }, Math.min(Math.random() * 4000, 6500));
+  }, Math.min(Math.random() * 4000, 2500));
 });
 
 
 function massage(line) {
-  // store each set of trips matching specific line color, direction, and hour
-  // redTrips: [[red0Object], [red1Object], [red2Object],... , [red24Object]]
-  // when draw, call lineColor, then simply grab item in array of tripsets
-  // return item in array of tripsets
-
   var coordinates = line;
   // filter ridership data to only trips on a specific line (red, blue, green, etc)
   var lineRiders = riders.filter(isOnLine);
@@ -121,7 +121,6 @@ function massage(line) {
 
 }
 
-
 // sum all riders that board at an origin station that's on a specific line
 function sumBoard (line, origin) {
   var ridersCount = line.reduce(function(sum, x) {
@@ -146,10 +145,12 @@ function sumExits (trips, dest) {
 
 function draw(lineColor, trips) {
   console.log("draw hour " + h);
+  console.log("trips: " + JSON.stringify(trips));
   var coordinates = lineColor;
   var temp = [];
   var time = 0;
   var totalTime = 0;
+  var trainLoad = 0;
 
   // loop through to draw each trip individually until the end of coordinates
   for(var i = 0; i < coordinates.length - 1; ++i) {
