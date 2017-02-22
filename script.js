@@ -63,7 +63,6 @@ queue.awaitAll(function(error, jsonData) {
 var interval = setInterval(function() {
   if (h >= 23) {
     setTimeout(function() { h = 0;}, 5000);
-    document.getElementById("hour").innerHTML = h;
     d3.select("svg")
       .transition()
         .duration(6000)
