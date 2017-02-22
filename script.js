@@ -10,6 +10,7 @@ var filenames = [
 //append svg to div#line
 var svg = d3.select("#line")
   .append("svg")
+  .attr("opacity", 1.0)
   .attr("width", 1000)
   .attr("height", 1000)
   .attr("id", "visualization")
@@ -50,30 +51,41 @@ queue.awaitAll(function(error, jsonData) {
 
   // assign massaged ridership data per line
   direction = "north";
-  var redTrips = massage(red, direction);
-  var blueTrips = massage(blue, direction);
-  var orangeTrips = massage(orange, direction);
-  var yellowTrips = massage(yellow, direction);
-  var greenTrips = massage(green, direction);
-  var tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
-  
-  var interval = setInterval(function() {
-    if (h >= 23) { clearInterval(interval); }
-    if (linesArray.length < 1) {
-      ++h;
-      document.getElementById("hour").innerHTML = h;
-      linesArray = [red, blue, orange, yellow, green];
-      tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
-    }
-    var i = Math.floor(Math.random() * linesArray.length);
-    // draw using coordinate data and ridership data for specific line and hour
-    draw(linesArray[i], tripsArray[i][h]);
-    linesArray.splice(i, 1);
-    tripsArray.splice(i, 1);
-
-  }, Math.min(Math.random() * 4000, 2500));
+  redTrips = massage(red, direction);
+  blueTrips = massage(blue, direction);
+  orangeTrips = massage(orange, direction);
+  yellowTrips = massage(yellow, direction);
+  greenTrips = massage(green, direction);
+  tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
+  interval;
 });
 
+var interval = setInterval(function() {
+  if (h >= 23) {
+    setTimeout(function() { h = 0;}, 5000);
+    document.getElementById("hour").innerHTML = h;
+    d3.select("svg")
+      .transition()
+        .duration(6000)
+        .attr("opacity", 0)
+        .on("end", function() {
+          d3.select(this).selectAll("*").remove()
+          d3.select(this).transition().attr("opacity", 1.0);
+        });
+  }
+  if (linesArray.length < 1) {
+    ++h;
+    document.getElementById("hour").innerHTML = h;
+    linesArray = [red, blue, orange, yellow, green];
+    tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
+  }
+  var i = Math.floor(Math.random() * linesArray.length);
+  // draw using coordinate data and ridership data for specific line and hour
+  draw(linesArray[i], tripsArray[i][h]);
+  linesArray.splice(i, 1);
+  tripsArray.splice(i, 1);
+
+}, Math.min(Math.random() * 4000, 2500));
 
 function massage(line, direction) {  
   var coordinates = line;
@@ -82,7 +94,6 @@ function massage(line, direction) {
   if (direction == "north") {
     // filter ridership data to only trips on a specific line (red, blue, green, etc)
     var lineRidersBound = riders.filter(isOnLine).filter(isNorthBound);
-    console.log("lineRidersBound North: " + JSON.stringify(lineRidersBound));
   }
   else if (direction == "south") {
     var lineRidersBound = riders.filter(isOnLine).filter(isSouthBound);
@@ -158,17 +169,15 @@ function sumExits (trips, dest) {
 function draw(lineColor, trips) {
   console.log("draw hour " + h);
   console.log("trips: " + JSON.stringify(trips));
-  if (direction == "north") {
-    var reverse = reverse || false;
-    var coordinates = Array.prototype.slice.call(lineColor);
-    if(!reverse) coordinates.reverse();
-  }
-  else coordinates = lineColor;
-
   var temp = [];
   var time = 0;
   var totalTime = 0;
   var trainLoad = 0;
+  var coordinates = Array.prototype.slice.call(lineColor);
+  if (direction == "north") {
+    var reverse = reverse || false;
+    if(!reverse) coordinates.reverse();
+  }
 
   // loop through to draw each trip individually until the end of coordinates
   for(var i = 0; i < coordinates.length - 1; ++i) {
@@ -224,26 +233,28 @@ function draw(lineColor, trips) {
                 .delay(0)
                 .duration(fadeDuration)
                 .ease(d3.easeLinear)
-                .attr("opacity", 0.018);
+                .attr("opacity", 0.015);
           });
 
     totalTime += time;
     // todo: animate analog clock based on time
   }
 
-  if (h > 1) {
+  if (h > 12) {
     d3.select("#fade")
       .attr("class", "show")
       .on("input", function() {
         update(+this.value);
       });
-
+    d3.select("#reverse")
+      .attr("class", "show")
   }
 
   function update(fade) {
     fadeDuration = fade;
     console.log("duration: " + fade);
   }
+
   d3.select("#reverse")
     .on("click", function() {
       direction = (direction == "north") ? "south" : "north";
