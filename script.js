@@ -62,7 +62,6 @@ queue.awaitAll(function(error, jsonData) {
 
 var interval = setInterval(function() {
   if (h >= 23) {
-    setTimeout(function() { h = 0;}, 5000);
     d3.select("svg")
       .transition()
         .duration(6000)
@@ -70,8 +69,11 @@ var interval = setInterval(function() {
         .on("end", function() {
           d3.select(this).selectAll("*").remove()
           d3.select(this).transition().attr("opacity", 1.0);
+          h = 0;
+          document.getElementById("hour").innerHTML = h;
         });
   }
+
   if (linesArray.length < 1) {
     ++h;
     document.getElementById("hour").innerHTML = h;
