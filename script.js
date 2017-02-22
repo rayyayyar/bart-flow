@@ -50,7 +50,7 @@ queue.awaitAll(function(error, jsonData) {
   linesArray = [red, blue, orange, yellow, green];
 
   // assign massaged ridership data per line
-  direction = "north";
+  direction = "south";
   redTrips = massage(red, direction);
   blueTrips = massage(blue, direction);
   orangeTrips = massage(orange, direction);
