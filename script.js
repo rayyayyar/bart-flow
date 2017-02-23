@@ -15,7 +15,8 @@ var filenames = [
 var svg = d3.select("#line")
   .append("svg")
   .attr("opacity", 1.0)
-  .attr("viewBox", "0 0 800 800")
+  .attr("max-width", "1000px")
+  .attr("viewBox", "0 50 800 800")
   .attr("preserveAspectRatio", "xMidYMid meet")
   .attr("id", "visualization")
   .attr("xmlns", "http://www.w3.org/2000/svg");
