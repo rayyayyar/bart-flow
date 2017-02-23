@@ -57,7 +57,7 @@ queue.awaitAll(function(error, jsonData) {
   yellowTrips = massage(yellow, direction);
   greenTrips = massage(green, direction);
   tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
-  interval;
+  // interval;
 });
 
 var interval = setInterval(function() {
@@ -241,32 +241,44 @@ function draw(lineColor, trips) {
     // todo: animate analog clock based on time
   }
 
-  if (h > 12) {
+  if (h >= 20) {
     d3.select("#fade")
       .attr("class", "show")
       .on("input", function() {
         update(+this.value);
       });
-    d3.select("#reverse")
-      .attr("class", "show")
+    d3.select("#controls")
+      .attr("class", "show");
   }
 
   function update(fade) {
     fadeDuration = fade;
-    console.log("duration: " + fade);
   }
 
-  d3.select("#reverse")
+  d3.select("#inboundswitch")
     .on("click", function() {
-      direction = (direction == "north") ? "south" : "north";
-      console.log("direction: " + direction);
-      redTrips = massage(red, direction);
-      blueTrips = massage(blue, direction);
-      orangeTrips = massage(orange, direction);
-      yellowTrips = massage(yellow, direction);
-      greenTrips = massage(green, direction);
-      tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
+      if (direction = "north") {
+        direction = "south";
+        redTrips = massage(red, direction);
+        blueTrips = massage(blue, direction);
+        orangeTrips = massage(orange, direction);
+        yellowTrips = massage(yellow, direction);
+        greenTrips = massage(green, direction);
+        tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
+      }
     });
-
+  d3.select("#outboundswitch")
+    .on("click", function() {
+      console.log("switch directions");
+      if (direction = "south") {
+        direction = "north";
+        redTrips = massage(red, direction);
+        blueTrips = massage(blue, direction);
+        orangeTrips = massage(orange, direction);
+        yellowTrips = massage(yellow, direction);
+        greenTrips = massage(green, direction);
+        tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
+      }
+    });
 }
 
