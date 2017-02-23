@@ -1,3 +1,7 @@
+document.addEventListener("DOMContentLoaded", function() { 
+  stickBottom();
+});
+
 var filenames = [
   "red.json", 
   "blue.json",
@@ -11,8 +15,6 @@ var filenames = [
 var svg = d3.select("#line")
   .append("svg")
   .attr("opacity", 1.0)
-  // .attr("width", 800)
-  // .attr("height", 800)
   .attr("viewBox", "0 0 800 800")
   .attr("preserveAspectRatio", "xMidYMid meet")
   .attr("id", "visualization")
@@ -279,4 +281,8 @@ function draw(lineColor, trips) {
       }
     });
 }
-
+ function stickBottom() {
+   document.getElementById("footer").style.bottom = 0;
+ }
+ 
+ window.onresize = stickBottom;

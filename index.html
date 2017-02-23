@@ -8,11 +8,6 @@
 		.show { visibility: visible; opacity: 1.0; transition: all 2s;}
 		.hidden { visibility: hidden; opacity: 0.0; }
 
-		#controls {
-			bottom: 20px;
-			position: absolute;
-		}
-
 		div#line {
 			text-align: center;
 		}
@@ -74,40 +69,54 @@
 			margin-left: 20px;
 			display: inline-block;
 		}
+
+		footer {
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			height: auto;
+		}
+
 		.time {
 			font-size: 32px;
 			color: cadetblue;
 			font-weight: bold;
+			position: relative;
+			bottom: 32px;
+			right: 42px;
+			width: 100%;
+			text-align: right;
+		}
+
+		#controls {
 			position: absolute;
-			bottom: 20px;
-			right: 40px;
+			bottom: 32px;
+			left: 32px;
 		}
 
 	</style>
 </head>
 <body>
-	<div class="time">
-		<span id="hour">00</span><span id="minutes">:00</span>
-	</div>
-	<div class="clock">
-		<div class="seconds-container">
-			<div class="seconds"></div>
-		</div>
-	</div>
+	
 
   <div id="line"></div>​
   <script type="text/javascript" src="http://d3js.org/d3.v4.js"></script>
   <script src="http://d3js.org/queue.v1.min.js"></script>
   <script type="text/javascript" src="script.js"></script>
-  <div id="controls" class="hidden">
-  	<div class="switch-field" id="reverse">
-      <input type="radio" id="inboundswitch" name="switch" value="Inbound" checked/>
-      <label for="inboundswitch">Inbound</label>
-      <input type="radio" id="outboundswitch" name="switch" value="Outbound" />
-      <label for="outboundswitch">Outbound</label>
-    </div>
-	  <input type="range" min="50" max="7000" id="fade" class="hidden">	  
-	</div>
+  <footer id="footer">
+	  <div class="time">
+			<span id="hour">00</span><span id="minutes">:00</span>
+		</div>
+	  <div id="controls" class="hidden">
+	  	<div class="switch-field" id="reverse">
+	      <input type="radio" id="inboundswitch" name="switch" value="Inbound" checked/>
+	      <label for="inboundswitch">Inbound</label>
+	      <input type="radio" id="outboundswitch" name="switch" value="Outbound" />
+	      <label for="outboundswitch">Outbound</label>
+	    </div>
+		  <input type="range" min="50" max="7000" id="fade" class="hidden">	  
+		</div>
+	</footer>
 
 	
 
