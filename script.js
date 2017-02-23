@@ -86,7 +86,7 @@ var interval = setInterval(function() {
   linesArray.splice(i, 1);
   tripsArray.splice(i, 1);
 
-}, Math.min(Math.random() * 4000, 2500));
+}, 2500);
 
 function massage(line, direction) {  
   var coordinates = line;
