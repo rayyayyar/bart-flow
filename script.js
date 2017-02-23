@@ -11,8 +11,10 @@ var filenames = [
 var svg = d3.select("#line")
   .append("svg")
   .attr("opacity", 1.0)
-  .attr("width", 1000)
-  .attr("height", 1000)
+  // .attr("width", 800)
+  // .attr("height", 800)
+  .attr("viewBox", "0 0 800 800")
+  .attr("preserveAspectRatio", "xMidYMid meet")
   .attr("id", "visualization")
   .attr("xmlns", "http://www.w3.org/2000/svg");
 
@@ -168,8 +170,6 @@ function sumExits (trips, dest) {
 }
 
 function draw(lineColor, trips) {
-  console.log("draw hour " + h);
-  console.log("trips: " + JSON.stringify(trips));
   var temp = [];
   var time = 0;
   var totalTime = 0;
@@ -189,9 +189,7 @@ function draw(lineColor, trips) {
     var dest = temp[1].station;
 
     trainLoad += sumBoard(trips, origin) - sumExits(trips, dest);
-    console.log("At " + h + ":00, " + sumBoard(trips, origin) + " get on at " + origin + " and " + sumExits(trips, dest) + " get off at " + dest);
-    console.log("trainLoad: " + trainLoad);
-
+    // console.log("At " + h + ":00, " + sumBoard(trips, origin) + " get on at " + origin + " and " + sumExits(trips, dest) + " get off at " + dest);
     
     var paths = svg.append("path")
       .attr("d", line(temp))

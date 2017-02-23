@@ -13,6 +13,10 @@
 			position: absolute;
 		}
 
+		div#line {
+			text-align: center;
+		}
+
 		.switch-field {
 			overflow: hidden;
 			display: inline-block;
@@ -70,10 +74,27 @@
 			margin-left: 20px;
 			display: inline-block;
 		}
+		.time {
+			font-size: 32px;
+			color: cadetblue;
+			font-weight: bold;
+			position: absolute;
+			bottom: 20px;
+			right: 40px;
+		}
+
 	</style>
 </head>
 <body>
-	<span id="hour">00</span><span id="minutes">:00</span>
+	<div class="time">
+		<span id="hour">00</span><span id="minutes">:00</span>
+	</div>
+	<div class="clock">
+		<div class="seconds-container">
+			<div class="seconds"></div>
+		</div>
+	</div>
+
   <div id="line"></div>​
   <script type="text/javascript" src="http://d3js.org/d3.v4.js"></script>
   <script src="http://d3js.org/queue.v1.min.js"></script>
