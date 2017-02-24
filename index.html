@@ -94,6 +94,15 @@
 			left: 32px;
 		}
 
+		.constrained {
+			max-width: 1000px;
+		}
+		@media (max-width: 500px) {
+			#controls .switch-field {
+				display: block;
+			}
+		}
+
 	</style>
 </head>
 <body>
@@ -114,7 +123,7 @@
 	      <input type="radio" id="outboundswitch" name="switch" value="Outbound" />
 	      <label for="outboundswitch">Outbound</label>
 	    </div>
-		  <input type="range" min="50" max="7000" id="fade" class="hidden">	  
+	    <input type="range" min="50" max="7000" id="fade" class="hidden">
 		</div>
 	</footer>
 
