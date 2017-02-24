@@ -30,7 +30,7 @@ var tripsArray = [];
 var riders;
 var trainLoad = 0;
 var endCount = 0;
-var h = 0;
+var h = 4;
 var trips;
 var direction;
 var fadeDuration = 1000;
@@ -45,6 +45,7 @@ filenames.forEach(function(filename) {
 
 queue.awaitAll(function(error, jsonData) {
   if (error) throw error;
+  document.getElementById("hour").innerHTML = h;
   // assign coordinate data
   red = jsonData[0];
   blue = jsonData[1];
@@ -71,7 +72,7 @@ var interval = setInterval(function() {
     document.getElementById("hour").innerHTML = h;
     d3.select("svg")
       .transition()
-        .duration(6000)
+        .duration(7000)
         .attr("opacity", 0)
         .on("end", function() {
           d3.select(this).selectAll("*").remove()
@@ -239,7 +240,6 @@ function draw(lineColor, trips) {
           });
 
     totalTime += time;
-    // todo: animate analog clock based on time
   }
 
   if (h >= 20) {
@@ -270,7 +270,6 @@ function draw(lineColor, trips) {
     });
   d3.select("#outboundswitch")
     .on("click", function() {
-      console.log("switch directions");
       if (direction = "south") {
         direction = "north";
         redTrips = massage(red, direction);
