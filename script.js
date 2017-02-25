@@ -33,7 +33,8 @@ var endCount = 0;
 var h = 4;
 var trips;
 var direction;
-var fadeDuration = 1000;
+var timeConst = 100;
+var fadeDuration = timeConst * 10;
 var line =  d3.line()
   .x(function(d) { return d.x;  })
   .y(function(d) { return d.y; })
@@ -72,7 +73,7 @@ var interval = setInterval(function() {
     document.getElementById("hour").innerHTML = h;
     d3.select("svg")
       .transition()
-        .duration(7000)
+        .duration(70*timeConst)
         .attr("opacity", 0)
         .on("end", function() {
           d3.select(this).selectAll("*").remove()
@@ -92,7 +93,7 @@ var interval = setInterval(function() {
   linesArray.splice(i, 1);
   tripsArray.splice(i, 1);
 
-}, 2500);
+}, 25 * timeConst);
 
 function massage(line, direction) {  
   var coordinates = line;
@@ -188,7 +189,7 @@ function draw(lineColor, trips) {
   for(var i = 0; i < coordinates.length - 1; ++i) {
     temp[0] = coordinates[i];
     temp[1] = coordinates[i+1];
-    time = 900;
+    time = 9 * timeConst;
     var origin = temp[0].station;
     var dest = temp[1].station;
 
@@ -241,19 +242,37 @@ function draw(lineColor, trips) {
 
     totalTime += time;
   }
-
-  if (h >= 20) {
+  var timeout;
+  if (h === 14) {
     d3.select("#fade")
-      .attr("class", "show")
       .on("input", function() {
         update(+this.value);
       });
-    d3.select("#controls")
-      .attr("class", "show");
+    document.onmousemove = function(){
+      timeout = 0;
+      d3.select("#controls")
+        .attr("class", "show");
+    }
   }
+  timeout = setTimeout(function(){
+        if (timeout != 0) {
+          d3.select("#controls")
+          .attr("class", "hidden");
+        }
+        }, 12000);
+  
 
   function update(fade) {
     fadeDuration = fade;
+  }
+
+  if (h > 17) {
+    d3.select("body").style("background-color", "#1F2A4D");
+    d3.select(".time").style("color", "#FFFFFF");
+  }
+  else if (h > 3) {
+    d3.select("body").style("background-color", "floralwhite"); 
+    d3.select(".time").style("color", "cadetblue");
   }
 
   d3.select("#inboundswitch")
