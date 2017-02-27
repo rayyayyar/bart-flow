@@ -311,8 +311,6 @@ function draw(lineColor, trips) {
 idleTime = setInterval(function(){ if(h>14) {timerIncrement();}}, 1000);
 var idleTime = 0;
 function timerIncrement() {
-  console.log("timerincrement");
-  console.log(idleTime);
   if (idleTime == 0) {
     d3.select("#controls")
     .attr("class", "show");
