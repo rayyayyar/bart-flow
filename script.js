@@ -35,6 +35,7 @@ var trips;
 var direction;
 var timeConst = 100;
 var fadeDuration = timeConst * 10;
+var controls;
 var line =  d3.line()
   .x(function(d) { return d.x;  })
   .y(function(d) { return d.y; })
@@ -242,25 +243,6 @@ function draw(lineColor, trips) {
 
     totalTime += time;
   }
-  var timeout;
-  if (h === 14) {
-    d3.select("#fade")
-      .on("input", function() {
-        update(+this.value);
-      });
-    document.onmousemove = function(){
-      timeout = 0;
-      d3.select("#controls")
-        .attr("class", "show");
-    }
-  }
-  timeout = setTimeout(function(){
-        if (timeout != 0) {
-          d3.select("#controls")
-          .attr("class", "hidden");
-        }
-        }, 12000);
-  
 
   function update(fade) {
     fadeDuration = fade;
@@ -274,8 +256,43 @@ function draw(lineColor, trips) {
     d3.select("body").style("background-color", "floralwhite"); 
     d3.select(".time").style("color", "cadetblue");
   }
+  if (h > 14) {
+    d3.select("#fade")
+      .on("input", function() {
+        update(+this.value);
+      });
+    document.onmousemove = function(){
+      idleTime = 0;
+      d3.select("#controls")
+      .attr("class", "show");
+    }
+    document.onmousedown = function() {
+      idleTime = 0;
+      d3.select("#controls")
+        .attr("class", "show");
+    }
+  }
+}
+// end draw()
 
-  d3.select("#inboundswitch")
+// Set timer to fade out controls
+idleTime = setInterval(function(){ if(h>4) {timerIncrement();}}, 1000);
+var idleTime = 0;
+function timerIncrement() {
+  console.log("timerincrement");
+  console.log(idleTime);
+  if (idleTime == 0) {
+    d3.select("#controls")
+    .attr("class", "show");
+  }
+  if (idleTime > 6) {
+    d3.select("#controls")
+    .attr("class", "hidden");
+  }
+  idleTime++;
+}
+
+d3.select("#inboundswitch")
     .on("click", function() {
       if (direction = "north") {
         direction = "south";
@@ -287,21 +304,24 @@ function draw(lineColor, trips) {
         tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
       }
     });
-  d3.select("#outboundswitch")
-    .on("click", function() {
-      if (direction = "south") {
-        direction = "north";
-        redTrips = massage(red, direction);
-        blueTrips = massage(blue, direction);
-        orangeTrips = massage(orange, direction);
-        yellowTrips = massage(yellow, direction);
-        greenTrips = massage(green, direction);
-        tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
-      }
-    });
+d3.select("#outboundswitch")
+  .on("click", function() {
+    if (direction = "south") {
+      direction = "north";
+      redTrips = massage(red, direction);
+      blueTrips = massage(blue, direction);
+      orangeTrips = massage(orange, direction);
+      yellowTrips = massage(yellow, direction);
+      greenTrips = massage(green, direction);
+      tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
+    }
+  });
+
+
+
+function stickBottom() {
+ document.getElementById("footer").style.bottom = 0;
 }
- function stickBottom() {
-   document.getElementById("footer").style.bottom = 0;
- }
- 
- window.onresize = stickBottom;
+
+window.onresize = stickBottom;
+
