@@ -276,7 +276,7 @@ function draw(lineColor, trips) {
 // end draw()
 
 // Set timer to fade out controls
-idleTime = setInterval(function(){ if(h>4) {timerIncrement();}}, 1000);
+idleTime = setInterval(function(){ if(h>14) {timerIncrement();}}, 1000);
 var idleTime = 0;
 function timerIncrement() {
   console.log("timerincrement");
