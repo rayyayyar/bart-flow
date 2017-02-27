@@ -47,7 +47,7 @@ filenames.forEach(function(filename) {
 
 queue.awaitAll(function(error, jsonData) {
   if (error) throw error;
-  document.getElementById("hour").innerHTML = h;
+  document.getElementById("hour").innerHTML = convertMilitary(h);
   // assign coordinate data
   red = jsonData[0];
   blue = jsonData[1];
@@ -68,10 +68,18 @@ queue.awaitAll(function(error, jsonData) {
   // interval;
 });
 
+function convertMilitary(hour) {
+  if (hour > 11) {
+    if (hour > 12) { hour = hour - 12; }
+    return hour + ":00 pm";
+  }
+  else return hour + ":00 am"
+}
+
 var interval = setInterval(function() {
   if (h > 23) {
     h = 0;
-    document.getElementById("hour").innerHTML = h;
+    document.getElementById("hour").innerHTML = convertMilitary(h);
     d3.select("svg")
       .transition()
         .duration(70*timeConst)
@@ -84,7 +92,7 @@ var interval = setInterval(function() {
 
   if (linesArray.length < 1) {
     ++h;
-    document.getElementById("hour").innerHTML = h;
+    document.getElementById("hour").innerHTML = convertMilitary(h);
     linesArray = [red, blue, orange, yellow, green];
     tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
   }
@@ -272,6 +280,30 @@ function draw(lineColor, trips) {
         .attr("class", "show");
     }
   }
+  d3.select("#inboundswitch")
+    .on("click", function() {
+      if (direction = "north") {
+        direction = "south";
+        redTrips = massage(red, direction);
+        blueTrips = massage(blue, direction);
+        orangeTrips = massage(orange, direction);
+        yellowTrips = massage(yellow, direction);
+        greenTrips = massage(green, direction);
+        tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
+      }
+    });
+  d3.select("#outboundswitch")
+    .on("click", function() {
+      if (direction = "south") {
+        direction = "north";
+        redTrips = massage(red, direction);
+        blueTrips = massage(blue, direction);
+        orangeTrips = massage(orange, direction);
+        yellowTrips = massage(yellow, direction);
+        greenTrips = massage(green, direction);
+        tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
+      }
+    });
 }
 // end draw()
 
@@ -292,30 +324,7 @@ function timerIncrement() {
   idleTime++;
 }
 
-d3.select("#inboundswitch")
-    .on("click", function() {
-      if (direction = "north") {
-        direction = "south";
-        redTrips = massage(red, direction);
-        blueTrips = massage(blue, direction);
-        orangeTrips = massage(orange, direction);
-        yellowTrips = massage(yellow, direction);
-        greenTrips = massage(green, direction);
-        tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
-      }
-    });
-d3.select("#outboundswitch")
-  .on("click", function() {
-    if (direction = "south") {
-      direction = "north";
-      redTrips = massage(red, direction);
-      blueTrips = massage(blue, direction);
-      orangeTrips = massage(orange, direction);
-      yellowTrips = massage(yellow, direction);
-      greenTrips = massage(green, direction);
-      tripsArray = [redTrips, blueTrips, orangeTrips, yellowTrips, greenTrips];
-    }
-  });
+
 
 
 
