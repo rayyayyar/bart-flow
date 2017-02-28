@@ -258,7 +258,7 @@ function draw(lineColor, trips) {
 
   if (h > 17) {
     d3.select("body").style("background-color", "#1F2A4D");
-    d3.select(".time").style("color", "#FFFFFF");
+    d3.select(".time, .question").style("color", "#FFFFFF");
   }
   else if (h > 3) {
     d3.select("body").style("background-color", "floralwhite"); 

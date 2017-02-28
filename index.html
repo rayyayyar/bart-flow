@@ -91,7 +91,7 @@
 		#controls {
 			position: absolute;
 			bottom: 32px;
-			left: 32px;
+			left: 52px;
 		}
 
 		.constrained {
@@ -101,6 +101,25 @@
 			#controls .switch-field {
 				display: block;
 			}
+		}
+
+		.about {
+			display: inline-block;
+	    position: absolute;
+	    bottom: 40px;
+	    left: 18px;
+	    font-weight: bolder;
+	    opacity: .2;
+	    font-size: 20px;
+	    transition: all 2s;
+		}
+
+		.about:hover {
+			opacity: 0.8;
+		}
+
+		a {
+			text-decoration: none;
 		}
 
 	</style>
@@ -117,6 +136,7 @@
 			<span id="hour"></span>
 			<!-- <span id="minutes">:00</span> -->
 		</div>
+		<div class="about"><a href="http://rayluong.com/transitflow">?</a></div>
 	  <div id="controls" class="hidden">
 	  	<div class="switch-field" id="reverse">
 	      <input type="radio" id="inboundswitch" name="switch" value="Inbound" checked/>
