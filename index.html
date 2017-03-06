@@ -6,6 +6,7 @@
 			document.location = "https://youtu.be/owGgbAS7Wq8";
 		}
 	</script>
+	<title>Transit Flow - an experiment using D3 and BART data to explore how Bay Area transit ridership changes throughout the day.</title>
 	<style>
 		body {
 			font-family: Source Sans Pro, Open Sans, Helvetica, Arial, sans-serif;
@@ -86,7 +87,7 @@
 			font-size: 32px;
 			color: cadetblue;
 			font-weight: bold;
-			position: relative;
+			position: absolute;
 			bottom: 32px;
 			right: 42px;
 			width: 100%;
@@ -96,7 +97,7 @@
 		#controls {
 			position: absolute;
 			bottom: 32px;
-			left: 32px;
+			left: 52px;
 		}
 
 		.constrained {
@@ -106,6 +107,25 @@
 			#controls .switch-field {
 				display: block;
 			}
+		}
+
+		.about {
+			display: inline-block;
+	    position: absolute;
+	    bottom: 40px;
+	    left: 18px;
+	    font-weight: bolder;
+	    opacity: .2;
+	    font-size: 20px;
+	    transition: all 2s;
+		}
+
+		.about:hover {
+			opacity: 0.8;
+		}
+
+		a {
+			text-decoration: none;
 		}
 
 	</style>
@@ -119,6 +139,7 @@
 	  <div class="time">
 			<span id="hour"></span>
 		</div>
+		<div class="about"><a href="http://rayluong.com/transitflow" target="_blank">?</a></div>
 	  <div id="controls" class="hidden">
 	  	<div class="switch-field" id="reverse">
 	      <input type="radio" id="inboundswitch" name="switch" value="Inbound" checked/>
@@ -128,6 +149,7 @@
 	    </div>
 	    <input type="range" min="50" max="7000" id="fade">
 		</div>
+		<img src="transitflow.png" alt=" " class="hidden">
 	</footer>
   </script>
 </body>

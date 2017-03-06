@@ -261,13 +261,13 @@ function draw(lineColor, trips) {
 
   if (h > 17) {
     d3.select("body").style("background-color", "#1F2A4D");
-    d3.select(".time").style("color", "#FFFFFF");
+    d3.select(".time, .question").style("color", "#FFFFFF");
   }
   else if (h > 3) {
     d3.select("body").style("background-color", "floralwhite"); 
     d3.select(".time").style("color", "cadetblue");
   }
-  if (h > 14) {
+  if (h > 11) {
     d3.select("#fade")
       .on("input", function() {
         update(+this.value);
@@ -311,7 +311,7 @@ function draw(lineColor, trips) {
 // end draw()
 
 // Set timer to fade out controls
-idleTime = setInterval(function(){ if(h>14) {timerIncrement();}}, 1000);
+idleTime = setInterval(function(){ if(h>11) {timerIncrement();}}, 1000);
 var idleTime = 0;
 function timerIncrement() {
   if (idleTime == 0) {
@@ -324,10 +324,6 @@ function timerIncrement() {
   }
   idleTime++;
 }
-
-
-
-
 
 function stickBottom() {
  document.getElementById("footer").style.bottom = 0;
