@@ -69,11 +69,14 @@ queue.awaitAll(function(error, jsonData) {
 });
 
 function convertMilitary(hour) {
+  if (hour > 23) {
+    return "0:00 am";
+  }
   if (hour > 11) {
     if (hour > 12) { hour = hour - 12; }
     return hour + ":00 pm";
   }
-  else return hour + ":00 am"
+  else return hour + ":00 am";
 }
 
 var interval = setInterval(function() {

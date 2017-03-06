@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<script type="text/javascript">
+		if (screen.width <= 699) {
+			document.location = "https://youtu.be/owGgbAS7Wq8";
+		}
+	</script>
 	<style>
 		body {
 			font-family: Source Sans Pro, Open Sans, Helvetica, Arial, sans-serif;
@@ -106,8 +111,6 @@
 	</style>
 </head>
 <body>
-	
-
   <div id="line"></div>​
   <script type="text/javascript" src="d3.min.js"></script>
   <script src="https://d3js.org/queue.v1.min.js"></script>
@@ -115,7 +118,6 @@
   <footer id="footer">
 	  <div class="time">
 			<span id="hour"></span>
-			<!-- <span id="minutes">:00</span> -->
 		</div>
 	  <div id="controls" class="hidden">
 	  	<div class="switch-field" id="reverse">
@@ -127,10 +129,6 @@
 	    <input type="range" min="50" max="7000" id="fade">
 		</div>
 	</footer>
-
-	
-
-
   </script>
 </body>
 </html>
